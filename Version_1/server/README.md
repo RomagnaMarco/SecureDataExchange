@@ -18,3 +18,7 @@
   - Set up a database using the free tier.
   - Choose **Azure** as the cloud provider.
   - Ensure the database is hosted in **US West**.
+
+- **Authentication**:
+  - Create a new **user** and set a **password** in `Security` > `Database Access`.
+  - Use these credentials to authenticate and establish a connection to the database.
