@@ -31,4 +31,5 @@ Building a foundational web application using the MERN stack: MongoDB, Express.j
 
 # Add Dependencies
  ``` yarn add express cors bcrypt jsonwebtoken mongoose ```
+ 
  ``` yarn add --dev nodemon ```
