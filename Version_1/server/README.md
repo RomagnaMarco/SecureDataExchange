@@ -22,3 +22,10 @@
 - **Authentication**:
   - Create a new **user** and set a **password** in `Security` > `Database Access`.
   - Use these credentials to authenticate and establish a connection to the database.
+  
+- **Connection**:
+  - Navigate to your database and select the one you've created.
+  - Click on `Connect` and then select `Connect using MongoDB Drivers`.
+  - Copy the provided connection string.
+  - Paste this connection string into the `index.js` file within your server code, ensuring that you provide the correct credentials, so that Mongoose can establish a connection to the database. Replace password with your password (Use .env variables to keep this data safe).
+
