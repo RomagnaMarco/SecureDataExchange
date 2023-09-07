@@ -34,4 +34,3 @@ A robust MERN-based application that empowers users to securely store, organize,
 4. **Run the Application**:
   -npm start
 
-For detailed setup and configuration instructions, refer to the [Setup Guide](link_to_detailed_setup.md).
