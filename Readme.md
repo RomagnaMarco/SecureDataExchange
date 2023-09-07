@@ -30,7 +30,7 @@ A robust MERN-based application that empowers users to securely store, organize,
 2. **Navigate to the directory**:
   - cd into project
 3. **Install Dependencies**:
-  - npm install
+  - yarn install
 4. **Run the Application**:
-  -npm start
+  - yarn start
 
