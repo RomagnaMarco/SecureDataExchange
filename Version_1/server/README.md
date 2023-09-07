@@ -1,3 +1,4 @@
+
 ### 🌐 **MongoDB Atlas Setup**
 
 - **Atlas**: 
@@ -12,3 +13,8 @@
 - **IP Whitelisting**: 
   - Navigate to `Security` > `Network Access` and whitelist your IP. 
   - ⚠️ **Note**: If using a VPN, it can change your IP. Ensure the VPN's IP is whitelisted.
+
+- **Database Creation**:
+  - Set up a database using the free tier.
+  - Choose **Azure** as the cloud provider.
+  - Ensure the database is hosted in **US West**.
