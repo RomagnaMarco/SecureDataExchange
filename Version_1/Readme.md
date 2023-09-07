@@ -17,19 +17,22 @@ Building a foundational web application using the MERN stack: MongoDB, Express.j
 
 ## Getting Started
 
-# Navigate to the directory
+### Navigate to the directory
 ```cd into SecureDataExchange\Version_1\client ```
 
-# Set up a new React app
+#### Set up a new React app
 ```yarn create react-app . ```
 
-# Navigate to the directory
+### Navigate to the directory
 ``` cd into SecureDataExchange\Version_1\server ```
 
-# Set up a new Package Json
+### Set up a new Package Json
 ``` yarn init ```
 
-# Add Dependencies
+### Add Dependencies
  ``` yarn add express cors bcrypt jsonwebtoken mongoose ```
  
  ``` yarn add --dev nodemon ```
+
+## Starting the Backend Server
+``` yarn start ```
