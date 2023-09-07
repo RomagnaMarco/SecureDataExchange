@@ -4,16 +4,16 @@ Building a foundational web application using the MERN stack: MongoDB, Express.j
 
 ## 🌟 Features (v1.0)
 
-- **Frontend**: React
-- **Backend**: Express.js with Node.js
-  - Authentication: bcrypt, jsonwebtoken
-- **Database**: MongoDB with Mongoose ODM
+- **Frontend**: A basic React web interface.
+- **Backend**: Express.js server running on Node.js.
+- **Database**: MongoDB setup and connection.
 
 ## 🔧 Tech Stack
 
 - **Frontend**: React
 - **Backend**: Express.js with Node.js
-- **Database**: MongoDB
+  - Authentication: bcrypt, jsonwebtoken
+- **Database**: MongoDB with Mongoose ODM
 
 ## Getting Started
 
