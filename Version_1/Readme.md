@@ -1,10 +1,16 @@
-### Version 1
-This is the first version of my secure Login.
-## Goals:
-1. basic login feature
-2. connect to azure
+# MERN Stack Foundation (v1.0)
 
-## Version 1 Notes
-1. Make mainly with static html and inline JS
-   - small project for version 1, so I'm not going to worry too much about maintanability for this first draft.
-  
+Building a foundational web application using the MERN stack: MongoDB, Express.js, React, and Node.js.
+
+## 🌟 Features (v1.0)
+
+- **Frontend**: A basic React web interface.
+- **Backend**: Express.js server running on Node.js.
+- **Database**: MongoDB setup and connection.
+
+## 🔧 Tech Stack
+
+- **Frontend**: React
+- **Backend**: Express.js with Node.js
+- **Database**: MongoDB
+
