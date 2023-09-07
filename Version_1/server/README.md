@@ -28,4 +28,5 @@
   - Click on `Connect` and then select `Connect using MongoDB Drivers`.
   - Copy the provided connection string.
   - Paste this connection string into the `index.js` file within your server code, ensuring that you provide the correct credentials, so that Mongoose can establish a connection to the database. Replace password with your password (Use .env variables to keep this data safe).
+  - Add database name in between / and ?retryWrites
 
