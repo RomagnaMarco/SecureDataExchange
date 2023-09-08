@@ -30,3 +30,25 @@
   - Paste this connection string into the `index.js` file within your server code, ensuring that you provide the correct credentials, so that Mongoose can establish a connection to the database. Replace password with your password (Use .env variables to keep this data safe).
   - Add database name in between / and ?retryWrites
 
+### MongoDB Visualization and Interaction
+
+To effectively visualize and interact with your MongoDB data using the `securedata` database, follow these steps:
+
+1. **Download MongoDB Compass**:
+   - [MongoDB Compass](https://www.mongodb.com/products/tools/compass) is the official GUI tool for MongoDB. It provides an interactive view of your data.
+
+2. **Get Your Connection String from MongoDB Atlas**:
+   - Log in to your MongoDB Atlas account.
+   - Locate your `securedata` cluster and click on the `Connect` button.
+   - Choose the `Connect with MongoDB Compass` option.
+   - Copy the provided connection string. Make sure to replace any placeholders, such as `<password>`, with your actual credentials.
+
+3. **Connect to Your Database via Compass**:
+   - Launch MongoDB Compass.
+   - Insert the connection string you copied from MongoDB Atlas into the required field.
+   
+4. **Use the `securedata` Database**:
+   - Once connected in Compass, you'll see a list of databases. Access the database named `securedata`.
+   - Inside `securedata`, if not already existing, create a collection named `users`. This name should correspond with the user model located at `/server/src/models/Users.js`.
+
+**Note**: Always double-check your connection string for accuracy before connecting.
