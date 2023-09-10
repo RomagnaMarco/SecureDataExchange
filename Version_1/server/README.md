@@ -71,3 +71,19 @@ The SecureDataExchange API offers secure endpoints for user registration and log
 
 With Insomnia ready, interacting with SecureDataExchange API's endpoints becomes straightforward.
 
+### 🛠 **Using Insomnia**
+
+Insomnia is a powerful tool for testing API endpoints. It provides a clean interface to set up requests, view responses, and diagnose network operations. Here's a quick guide to get you started:
+
+1. **Create a New Request Document**
+    - Click on the `+` symbol.
+    - Choose `New Request` and give it a meaningful name. We will use HTTP Requests for now.
+
+2. **Set Up Your HTTP Request**
+    - Input the API endpoint URL you want to test.
+    - From the dropdown menu, select the appropriate request type (GET, POST, PUT, etc.).
+    - If necessary, configure the body of the request:
+      - Ensure the body type is set to `JSON`.
+      - Enter the relevant JSON payload.
+
+
