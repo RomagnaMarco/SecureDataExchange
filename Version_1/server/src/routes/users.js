@@ -36,7 +36,27 @@ router.post("/register", async (req, res) => {
 })
 
 // Placeholder for a login endpoint
-router.post("/login");
+router.post("/login", async (req, res) => {
+    const { username, password } = req.body; //check login info
+    const user = await UserModel.findOne({ username: username }); //see if user exists
+
+    if(!user) { //error handle non-existant user
+        return res.json({message: "User Doesn't Exist!" })
+    }
+
+    //since we can't unhash somethng, we do the following
+    //check if what you entered, when hashed equals your hashed password. (since the algorithm will always return the same value)
+    //true is same, false is not.
+    const isPasswordValid = await bcrypt.compare(password, user.password)
+
+    if (!isPasswordValid) //handle inccorect password
+        return res.json({message: "Username or Password is Incorrect! "})
+
+    //make a webtoken
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+    res,json({token, userID: user._id })
+
+});
 
 // Export the router to be used in the main server file
 export { router as userRouter }
