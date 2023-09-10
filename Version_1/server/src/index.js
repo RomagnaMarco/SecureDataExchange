@@ -32,7 +32,7 @@ app.use("/auth", userRouter)
 //   * "retryWrites=true": Automatically retry write operations upon failure
 //   * "w=majority": Ensure data is written to the majority of replica set members before confirming
 mongoose.connect(
-`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/SecureData?retryWrites=true&w=majority`,
+`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/securedata?retryWrites=true&w=majority`,
     {
         useNewUrlParser: true,           // Use the new URL parser to process the connection string
         useUnifiedTopology: true,        // Use the unified topology for MongoDB client operations
