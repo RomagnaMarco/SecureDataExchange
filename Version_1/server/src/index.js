@@ -4,7 +4,7 @@ import express from 'express';      // Framework for creating web applications a
 import cors from 'cors';            // Middleware for enabling cross-origin requests
 import mongoose from 'mongoose';    // ODM (Object Data Modeling) library for MongoDB and Node.js
 
-import { userRouter } from './routes/users'; // Routes for user-related operations
+import { userRouter } from './routes/users.js'; // Routes for user-related operations
 
 import dotenv from 'dotenv';        // Library to load environment variables from a .env file
 dotenv.config();                    // Load environment variables from a .env file
@@ -32,11 +32,11 @@ app.use("/auth", userRouter)
 //   * "retryWrites=true": Automatically retry write operations upon failure
 //   * "w=majority": Ensure data is written to the majority of replica set members before confirming
 mongoose.connect(
-"mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/SecureData?retryWrites=true&w=majority",
-{
-    useNewUrlParser: true,           // Use the new URL parser to process the connection string
-    useUnifiedTopology: true,        // Use the unified topology for MongoDB client operations
-}
+`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/SecureData?retryWrites=true&w=majority`,
+    {
+        useNewUrlParser: true,           // Use the new URL parser to process the connection string
+        useUnifiedTopology: true,        // Use the unified topology for MongoDB client operations
+    }
 );
 
 // Start the Express server on port 3001
