@@ -52,3 +52,38 @@ To effectively visualize and interact with your MongoDB data using the `secureda
    - Inside `securedata`, if not already existing, create a collection named `users`. This name should correspond with the user model located at `/server/src/models/Users.js`.
 
 **Note**: Always double-check your connection string for accuracy before connecting.
+
+## API Overview
+
+The SecureDataExchange API offers secure endpoints for user registration and login, ensuring data protection and efficient processing.
+
+### Why Insomnia?
+
+- **Validation**: Easily test security features like password hashing and JWT authentication.
+- **Visualization**: View request and response data clearly, identifying potential issues.
+- **Ease of Use**: Its GUI simplifies crafting complex requests without resorting to the command-line.
+- **Environment Management**: Seamlessly manage and reuse API-related variables across requests.
+
+### Setting Up Insomnia:
+
+1. **Download**: Grab it from [Insomnia's official site](https://insomnia.rest/download).
+2. **Install**: Follow on-screen instructions.
+
+With Insomnia ready, interacting with SecureDataExchange API's endpoints becomes straightforward.
+
+### 🛠 **Using Insomnia**
+
+Insomnia is a powerful tool for testing API endpoints. It provides a clean interface to set up requests, view responses, and diagnose network operations. Here's a quick guide to get you started:
+
+1. **Create a New Request Document**
+    - Click on the `+` symbol.
+    - Choose `New Request` and give it a meaningful name. We will use HTTP Requests for now.
+
+2. **Set Up Your HTTP Request**
+    - Input the API endpoint URL you want to test.
+    - From the dropdown menu, select the appropriate request type (GET, POST, PUT, etc.).
+    - If necessary, configure the body of the request:
+      - Ensure the body type is set to `JSON`.
+      - Enter the relevant JSON payload.
+
+
