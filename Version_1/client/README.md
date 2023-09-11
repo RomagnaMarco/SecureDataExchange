@@ -1,42 +1,49 @@
-# Getting Started with Create React App
+# SecureDataExchange Frontend Application
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This README provides insights and setup information for the frontend of the SecureDataExchange full-stack application.
 
-## Available Scripts
-
-In the project directory, you can run:
+<details>
+<summary>## 🔍 Available Scripts</summary>
 
 ### `yarn start`
-
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+- **What it does**: Launches the app in development mode.
+- **Access**: Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- **Features**:
+  - Automatic page reloading upon source code changes.
+  - Displays lint errors in the console.
 
 ### `yarn test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **What it does**: Starts the test runner in interactive watch mode.
 
 ### `yarn build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- **What it does**: Creates a production-ready build in the `build` folder.
+- **Features**:
+  - Bundles React in production mode.
+  - Optimizes for the best performance.
+  - Minifies the build and appends hashes to filenames for cache management.
 
 ### `yarn eject`
+- **Caution**: This is irreversible! Once you've ejected, there's no going back.
+- **What it does**: Provides more control over build tools and configurations by removing the single build dependency and copying all configurations and dependencies into your project.
+- **Note**: Ejecting is optional. It's beneficial for larger projects requiring customization. Use with caution and understand the consequences before proceeding.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+</details>
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+<details>
+<summary>## 📦 Additional Dependencies</summary>
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+For a holistic frontend functionality in the SecureDataExchange application, we've integrated some pivotal dependencies:
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+### `react-router-dom`
+- **What it does**: Enables dynamic routing in the application, vital for crafting intuitive navigation within single-page applications.
 
+### `axios`
+- **What it does**: An esteemed promise-driven HTTP client instrumental in making asynchronous requests in JavaScript, paramount for asynchronous HTTP requests to RESTful endpoints and curating CRUD operations.
 
+### `react-cookie`
+- **What it does**: Offers a seamless cookie management system within React, crucial for reading, setting, and managing cookies across components.
+
+To seamlessly integrate these dependencies, execute:
+
+```bash
+yarn add react-router-dom axios react-cookie
