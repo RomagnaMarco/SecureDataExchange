@@ -47,7 +47,12 @@ const Register = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
-    return <Form />
+    return <Form 
+        username={username} 
+        setUsername={setUsername} 
+        password={password} 
+        setPassword={setPassword} 
+    />
 }
 
 const Form = ({username, setUsername, password, setPassword}) => {
