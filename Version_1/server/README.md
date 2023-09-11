@@ -1,5 +1,9 @@
+# SecureDataExchange Server API
 
-### 🌐 **MongoDB Atlas Setup**
+This repository contains the server-side implementation for SecureDataExchange, providing authentication and data management functionalities. The server is built using Express.js, and it interfaces with a MongoDB database.
+
+<details>
+<summary><h2>🌐 MongoDB Atlas Setup</h2></summary>
 
 - **Atlas**: 
   - We utilize [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) for our cloud database service.
@@ -30,7 +34,10 @@
   - Paste this connection string into the `index.js` file within your server code, ensuring that you provide the correct credentials, so that Mongoose can establish a connection to the database. Replace password with your password (Use .env variables to keep this data safe).
   - Add database name in between / and ?retryWrites
 
-### MongoDB Visualization and Interaction
+</details>
+
+<details>
+<summary><h2>🔍 MongoDB Visualization and Interaction</h2></summary>
 
 To effectively visualize and interact with your MongoDB data using the `securedata` database, follow these steps:
 
@@ -53,25 +60,35 @@ To effectively visualize and interact with your MongoDB data using the `secureda
 
 **Note**: Always double-check your connection string for accuracy before connecting.
 
-## API Overview
+</details>
+
+<details>
+<summary><h2>📝 API Overview</h2></summary>
 
 The SecureDataExchange API offers secure endpoints for user registration and login, ensuring data protection and efficient processing.
 
-### Why Insomnia?
+</details>
+
+<details>
+<summary><h2>❓ Why Insomnia?</h2></summary>
 
 - **Validation**: Easily test security features like password hashing and JWT authentication.
 - **Visualization**: View request and response data clearly, identifying potential issues.
 - **Ease of Use**: Its GUI simplifies crafting complex requests without resorting to the command-line.
 - **Environment Management**: Seamlessly manage and reuse API-related variables across requests.
 
-### Setting Up Insomnia:
+</details>
+
+<details>
+<summary><h2>🛠 Setting Up Insomnia</h2></summary>
 
 1. **Download**: Grab it from [Insomnia's official site](https://insomnia.rest/download).
 2. **Install**: Follow on-screen instructions.
 
-With Insomnia ready, interacting with SecureDataExchange API's endpoints becomes straightforward.
+</details>
 
-### 🛠 **Using Insomnia**
+<details>
+<summary><h2>🔧 Using Insomnia</h2></summary>
 
 Insomnia is a powerful tool for testing API endpoints. It provides a clean interface to set up requests, view responses, and diagnose network operations. Here's a quick guide to get you started:
 
@@ -86,4 +103,4 @@ Insomnia is a powerful tool for testing API endpoints. It provides a clean inter
       - Ensure the body type is set to `JSON`.
       - Enter the relevant JSON payload.
 
-
+</details>
