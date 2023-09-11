@@ -7,6 +7,7 @@ import { Home } from './pages/home';
 import { SavedData } from './pages/saved-data';
 import { AddData } from './pages/add-data';
 import { Auth } from './pages/auth';
+import { Navbar } from './components/navbar';
 
 // Main App component
 function App() {
@@ -14,6 +15,7 @@ function App() {
     <div className="App"> 
         {/* Setting up the router */}
         <Router>
+          <Navbar />
             {/* Defining routes for the application */}
             <Routes>
                 <Route path="/" element={ <Home />} />
