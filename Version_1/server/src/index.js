@@ -5,6 +5,7 @@ import cors from 'cors';            // Middleware for enabling cross-origin requ
 import mongoose from 'mongoose';    // ODM (Object Data Modeling) library for MongoDB and Node.js
 
 import { userRouter } from './routes/users.js'; // Routes for user-related operations
+import { dataRouter } from './routes/data.js' // Routes for data-related operations
 
 import dotenv from 'dotenv';        // Library to load environment variables from a .env file
 dotenv.config();                    // Load environment variables from a .env file
@@ -24,6 +25,10 @@ app.use(cors());
 // Associate the userRouter with the '/auth' path. 
 // All routes defined in userRouter will be prefixed with '/auth'
 app.use("/auth", userRouter)
+
+// Associate the dataRouter with the '/data' path. 
+// All routes defined in dataRouter will be prefixed with '/data'
+app.use("/data", dataRouter)
 
 // Connect to the MongoDB database using Mongoose
 // - The connection string is constructed using environment variables to keep credentials secure
