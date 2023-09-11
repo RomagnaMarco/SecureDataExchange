@@ -1,5 +1,8 @@
 import { useState } from "react"
 import axios from 'axios'
+//hooks
+import { useCookies } from 'react-cookie'
+import { useNavigate } from 'react-router-dom'
 
 // The auth component definition
 export const Auth = () => {
@@ -16,12 +19,43 @@ const Login = () => {
     const [username, setUsername] = useState("")
     const [password, setPassword] = useState("")
 
+    //use cookies hook
+    //we only need access to a function that sets a cookie
+    const [ , setCookies] = useCookies(["access_token"])
+    //nagivate hook.
+    const navigate = useNavigate()
+
+    const onSubmit = async (event) => {
+        event.preventDefault()
+        try {
+            //recieve what we get backf rom the api 
+            const response = await axios.post("http://localhost:3001/auth/login", {
+                username,
+                password,
+            })
+
+            //set response back from api to our cookie.
+            setCookies("access_token", response.data.token)
+
+            //set user id to local storage for quick acces to it
+            window.localStorage.setItem("userID", response.data.userID)
+
+            //redirect to homepage
+            navigate("/")
+
+        } catch(err) {
+            alert("An error has occured during Login")
+            console.error(err)
+        }
+    }
+
     return (<Form 
         username={username} 
         setUsername={setUsername} 
         password={password} 
         setPassword={setPassword} 
         label="Login"
+        onSubmit={onSubmit}
     />
     )
 }
