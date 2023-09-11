@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 const DataSchema = new mongoose.Schema({              
     clearanceLevel: {type: Number, required: true},
     info: [{ type: String, required: false }],
+    date: { type: Date, default: Date.now },
     userOwner: { 
         type: mongoose.Schema.Types.ObjectId,         // Using ObjectId to reference a user document.
         ref: "users",                                // Establishing a reference to the 'users' collection.
