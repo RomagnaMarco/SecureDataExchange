@@ -6,6 +6,8 @@ import mongoose from "mongoose";
 const UserSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    savedData: [{type: mongoose.Schema.Types.ObjectId, ref: "data"}],
+    clearanceLevel: { type: Number, default: 0, immutable: true }  // default to 0 and cannot be changed on creation
 });
 
 // Creating a UserModel using the UserSchema which corresponds to the "users" collection in MongoDB
