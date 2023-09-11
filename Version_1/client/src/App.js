@@ -1,15 +1,20 @@
+// Importing necessary styles and components
 import './App.css';
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom"
+// React Router imports for setting up routing
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+// Importing page components
 import { Home } from './pages/home';
 import { SavedData } from './pages/saved-data';
 import { AddData } from './pages/add-data';
 import { Auth } from './pages/auth';
 
-
+// Main App component
 function App() {
   return (
     <div className="App"> 
+        {/* Setting up the router */}
         <Router>
+            {/* Defining routes for the application */}
             <Routes>
                 <Route path="/" element={ <Home />} />
                 <Route path="/auth" element={ <Auth />} />
@@ -21,4 +26,5 @@ function App() {
   );
 }
 
+// Exporting the App component for use in other parts of the application
 export default App;
