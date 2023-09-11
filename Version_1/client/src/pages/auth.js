@@ -20,6 +20,7 @@ const Login = () => {
         setUsername={setUsername} 
         password={password} 
         setPassword={setPassword} 
+        label="Login"
     />
     )
 }
@@ -32,16 +33,17 @@ const Register = () => {
         username={username} 
         setUsername={setUsername} 
         password={password} 
-        setPassword={setPassword} 
+        setPassword={setPassword}
+        label="Register"
     />
     )
 }
 
-const Form = ({username, setUsername, password, setPassword}) => {
+const Form = ({username, setUsername, password, setPassword, label}) => {
     return (
         <div className="auth-container">
             <form>
-                <h2> Register </h2>
+                <h2> {label} </h2>
                 <div className="form-group">
                     <label htmlFor="username"> Username: </label>
                     <input
