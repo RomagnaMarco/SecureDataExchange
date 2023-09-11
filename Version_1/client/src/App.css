@@ -69,7 +69,7 @@ a {
   font-size: 25px;
 }
 
-.create-recipe {
+.add-data {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,7 +81,7 @@ a {
   margin: 20px;
   width: 400px;
 }
-.create-recipe form {
+.add-data form {
   display: flex;
   flex-direction: column;
 }
