@@ -1,9 +1,9 @@
 // Required Libraries and Models
-import express from "express";
-import mongoose from "mongoose";
-import { DataModel } from "../models/data.js";
-import { UserModel } from "../models/Users.js";
-import jwt from 'jsonwebtoken';
+import express from "express";  // Importing Express framework for building web applications
+import mongoose from "mongoose";  // Importing Mongoose for MongoDB object modeling
+import { DataModel } from "../models/data.js";  // Importing Data schema/model
+import { UserModel } from "../models/Users.js";  // Importing User schema/model
+import jwt from 'jsonwebtoken';  // Importing JSON Web Token for authentication
 
 // Middleware to verify a user's clearance for accessing data
 function verifyClearance(requiredClearance) {
@@ -15,7 +15,7 @@ function verifyClearance(requiredClearance) {
             // Decode the JWT token to get the user ID
             const decoded = jwt.verify(token, process.env.JWT_SECRET);
             
-            // Fetch the user with the decoded ID
+            // Fetch the user with the decoded ID from database
             const user = await UserModel.findById(decoded.id);
             
             // If no user found with the given ID, respond with an error
@@ -23,83 +23,111 @@ function verifyClearance(requiredClearance) {
                 return res.status(403).json({ message: "Invalid token." });
             }
 
-            // Check if the user's clearance level meets the required clearance
+            // Check if the user's clearance level meets or exceeds the required clearance
             if (user.clearanceLevel < requiredClearance) {
                 return res.status(403).json({ message: "Insufficient clearance." });
             }
 
-            // Store the user object in the request for subsequent route handling
+            // Attach the user object to the request for use in subsequent route handlers
             req.user = user;
             
             // Proceed to the next middleware or route handler
             next();
-
         } catch (err) {
-            // Handle any error during token verification or user fetching
+            // Error handling: could be token verification failure or database issues
             return res.status(401).json({ message: "Authentication error.", error: err });
         }
     };
 }
 
-// Initialize the Express Router
+// Initialize an instance of Express Router
 const router = express.Router();
 
 // GET route to fetch data based on user's clearance level
 router.get("/", verifyClearance(0), async (req, res) => {
     try {
-        // Fetch data with clearance level up to and including the user's clearance level
+        // Retrieve data from the database that matches or is below the user's clearance level
         const response = await DataModel.find({ clearanceLevel: { $lte: req.user.clearanceLevel } });
         res.json(response);
     } catch (err) {
-        // Handle any data fetching error
+        // Error handling for data retrieval
         res.json(err);
     }
 });
 
-// POST route to add new data, ensuring user has necessary clearance
+// POST route to add new data, with clearance check
 router.post("/", verifyClearance(0), async (req, res) => {
-    const data = new DataModel(req.body);
+    const data = new DataModel(req.body);  // Create a new data instance from the request body
     
-    // Ensure the user has the clearance to add this data
+    // Check if user's clearance is sufficient to add the given data
     if (req.user.clearanceLevel < data.clearanceLevel) {
         return res.status(403).json({ message: "Insufficient clearance level to add this data." });
     }
     
     try {
-        // Save the new data to the database
+        // Persist the data to the database
         const response = await data.save();
         res.json(response);
     } catch (err) {
-        // Handle any errors during data saving
+        // Error handling for data insertion
         res.json(err);
     }
 });
 
-// PUT route to update data, ensuring user has the right clearance
+// PUT route to update data, with clearance check
 router.put("/", verifyClearance(0), async (req, res) => {
     try {
-        // Fetch the data with the provided ID
+        // Fetch the data to be updated using its ID from the request body
         const data = await DataModel.findById(req.body.dataID);
         
-        // Check the user's clearance against the data's clearance level
+        // Ensure the user has sufficient clearance to update the data
         if (req.user.clearanceLevel < data.clearanceLevel) {
             return res.status(403).json({ message: "Insufficient clearance level to update this data." });
         }
 
-        // Fetch the user to update their savedData
+        // Fetch user's current savedData
         const user = await UserModel.findById(req.user._id);
 
-        // Update user's savedData list
+        // Append the data to the user's savedData array
         user.savedData.push(data);
         await user.save();
         
-        // Respond with the updated savedData list
+        // Return the updated savedData array
         res.json({ savedData: user.savedData });
     } catch (err) {
-        // Handle any errors during data or user fetching/updating
+        // Error handling for data update process
         res.json(err);
     }
 });
 
-// Export the router for use in the main server file
+// GET route to fetch IDs of saved data for the user
+router.get("/saved-data/ids", verifyClearance(0), async (req, res) => { 
+    try {
+        // Retrieve user's saved data IDs based on user ID from the decoded token
+        const user = await UserModel.findById(req.user._id);
+        res.json({ savedData: user?.savedData });
+    } catch (err) {
+        // Error handling for fetching saved data IDs
+        res.status(500).json({ message: "Internal server error", error: err });
+    }
+});
+
+// GET route to retrieve the actual saved data for the authenticated user
+router.get("/saved-data/", verifyClearance(0), async (req, res) => {
+    try {
+        // Retrieve user's saved data based on user ID from the decoded token
+        const user = await UserModel.findById(req.user._id);
+        const savedData = await DataModel.find({
+            _id: { $in: user.savedData },
+            clearanceLevel: { $lte: req.user.clearanceLevel }  // Ensure the data's clearance level is accessible by the user
+        });
+        
+        res.json({ savedData });
+    } catch (err) {
+        // Error handling for fetching saved data
+        res.status(500).json({ message: "Internal server error", error: err });
+    }
+});
+
+// Export the router so it can be mounted in the main server/application
 export { router as dataRouter };
