@@ -47,3 +47,37 @@ To seamlessly integrate these dependencies, execute:
 
 ```bash
 yarn add react-router-dom axios react-cookie
+```
+</details>
+
+<details>
+<summary>##🔐 Security Clearance and User Permissions</summary>
+
+In the SecureDataExchange application, user permissions and visibility are governed by their designated security clearance levels. Here's a breakdown of the functionalities and access granted to each security clearance level:
+
+### `Level 0`
+- **Permissions**:
+  - **GET**: Users can retrieve information.
+- **Restrictions**: Certain sensitive information might be concealed or redacted.
+
+### `Level 1`
+- **Permissions**:
+  - **GET**: Users can retrieve information.
+  - **POST**: Users can add or submit new information.
+- **Restrictions**: While users can both retrieve and post, certain data points or functionalities might be restricted based on their clearance.
+
+### `Level 2`
+- **Permissions**:
+  - **GET**: Users can retrieve information.
+  - **POST**: Users can add or submit new information.
+  - **PUT**: Users can modify or update existing information.
+- **Restrictions**: Even though they have more access, some functionalities or data might still be restricted.
+
+### `Level 3` (Admins)
+- **Permissions**:
+  - **Full Access**: Admins can GET, POST, PUT, and DELETE data. They have the most extensive set of privileges and can manage users, data, and application settings.
+- **Note**: Admins should be cautious and operate with due diligence given their elevated access rights.
+
+Always ensure that you're aware of your security clearance and only perform actions within your designated permissions. Misuse or unauthorized access attempts will be logged and may have consequences.
+
+</details>
