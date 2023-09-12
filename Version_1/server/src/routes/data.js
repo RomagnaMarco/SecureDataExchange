@@ -56,7 +56,7 @@ router.get("/", verifyClearance(0), async (req, res) => {
 });
 
 // POST route to add new data, with clearance check
-router.post("/", verifyClearance(0), async (req, res) => {
+router.post("/", verifyClearance(1), async (req, res) => {
     const data = new DataModel(req.body);  // Create a new data instance from the request body
     
     // Check if user's clearance is sufficient to add the given data
@@ -75,7 +75,7 @@ router.post("/", verifyClearance(0), async (req, res) => {
 });
 
 // PUT route to update data, with clearance check
-router.put("/", verifyClearance(0), async (req, res) => {
+router.put("/", verifyClearance(2), async (req, res) => {
     try {
         // Fetch the data to be updated using its ID from the request body
         const data = await DataModel.findById(req.body.dataID);
