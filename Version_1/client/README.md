@@ -43,10 +43,13 @@ For a holistic frontend functionality in the SecureDataExchange application, we'
 ### `react-cookie`
 - **What it does**: Offers a seamless cookie management system within React, crucial for reading, setting, and managing cookies across components.
 
+### `jwt-decode`
+- **What it does**: Facilitates decoding of JWTs, empowering the application to extract and use information stored in JSON Web Tokens. It's critical for user authentication and role-based access control within the application.
+
 To seamlessly integrate these dependencies, execute:
 
 ```bash
-yarn add react-router-dom axios react-cookie
+yarn add react-router-dom axios react-cookie jwt-decode
 ```
 </details>
 
