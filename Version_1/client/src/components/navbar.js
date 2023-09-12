@@ -2,6 +2,7 @@
 import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
+import jwtDecode from "jwt-decode";  // Import the JWT decoding library
 
 export const Navbar = () => {
     // Using the useCookies hook to manage the access_token cookie
@@ -9,6 +10,14 @@ export const Navbar = () => {
 
     // Using the useNavigate hook from react-router for programmatic navigation
     const navigate = useNavigate();
+
+    let clearanceLevel = 0; // Default clearance level
+
+    // If there's an access_token, decode it to get the clearance level
+    if (cookies.access_token) {
+        const decodedToken = jwtDecode(cookies.access_token);
+        clearanceLevel = decodedToken.clearanceLevel;
+    }
 
     // Logout function: clears the access_token cookie, removes userID from local storage, and navigates to the auth page
     const logout = () => {
@@ -25,7 +34,7 @@ export const Navbar = () => {
             {/* Conditional rendering based on whether the user is logged in (i.e., has an access_token) */}
             {cookies.access_token && (
                 <>
-                    <Link to="/add-data"> Add Data </Link>{" "}
+                    {clearanceLevel >= 1 && <Link to="/add-data"> Add Data </Link>}{" "}
                     <Link to="/saved-data"> Saved Data </Link>{" "}
                 </>
             )}
