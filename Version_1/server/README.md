@@ -105,7 +105,7 @@ Insomnia is a powerful tool for testing API endpoints. It provides a clean inter
 </details>
 
 <details>
-<summary><h2>3. Handling Authorization with Insomnia </h2></summary>
+<summary><h2> Handling Authorization with Insomnia </h2></summary>
 
 To ensure secure access and respect clearance levels for certain requests, it's imperative to properly handle authorization. Follow these detailed steps for optimal security:
 
@@ -128,4 +128,28 @@ To ensure secure access and respect clearance levels for certain requests, it's 
 > **Important**: Tokens, being access keys to your system, demand utmost security. Ensure they're stored safely. Exposing them in client-side scripts or public repositories is highly discouraged.
 
 </details>
+
+<details>
+<summary><h2>🔍 Checking Local Storage</h2></summary>
+
+Local storage is a web browser's feature that allows you to store key-value pairs in a persistent manner. In our application, we store certain data, like the user's ID, in local storage for quicker access upon subsequent visits or interactions.
+
+### How to Inspect Stored Data in Local Storage:
+
+1. **Access Developer Tools**:
+   - Right-click on any part of our frontend webpage.
+   - Select `Inspect` or `Inspect Element` from the dropdown menu.
+
+2. **Navigate to the Application Tab**:
+   - Within the Developer Tools, locate and click on the `Application` tab.
+
+3. **View Local Storage Data**:
+   - In the left sidebar of the `Application` tab, click on `Local Storage`. This will expand to show all domains for which data is stored.
+   - Select your website's domain. You should now see a table displaying all the key-value pairs stored in local storage for your domain.
+   - Here, you can locate the `userID` key to see its corresponding value.
+
+> **Note**: Always exercise caution when dealing with local storage, especially if storing sensitive data. Although data in local storage persists even after the browser is closed, it can be inspected by anyone with access to the browser.
+
+</details>
+
 
