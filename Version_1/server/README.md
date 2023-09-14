@@ -88,7 +88,7 @@ The SecureDataExchange API offers secure endpoints for user registration and log
 </details>
 
 <details>
-<summary><h2>🔧 Using Insomnia</h2></summary>
+<summary><h2>🔧 Using Insomnia (Basics) </h2></summary>
 
 Insomnia is a powerful tool for testing API endpoints. It provides a clean interface to set up requests, view responses, and diagnose network operations. Here's a quick guide to get you started:
 
@@ -102,5 +102,30 @@ Insomnia is a powerful tool for testing API endpoints. It provides a clean inter
     - If necessary, configure the body of the request:
       - Ensure the body type is set to `JSON`.
       - Enter the relevant JSON payload.
+</details>
+
+<details>
+<summary><h2>3. Handling Authorization with Insomnia </h2></summary>
+
+To ensure secure access and respect clearance levels for certain requests, it's imperative to properly handle authorization. Follow these detailed steps for optimal security:
+
+1. **Log in as a User**: 
+    - Start by initiating a login request for the user you're testing with.
+    - Upon a successful login, the response will provide a token. This token represents the user's session and also embeds their clearance level.
+
+2. **Check Clearance Level**:
+    - Before proceeding, verify the user's clearance level. Make sure it aligns with the requirements of the specific endpoint you aim to test. Different endpoints might necessitate different clearance levels.
+
+3. **Setting the Authorization Header**:
+    - For authenticated requests, inclusion of the `Authorization` header is a must.
+    - This header should be structured as: `Bearer YOUR_RECEIVED_TOKEN`.
+    - For clarity, if you have a token like `abc123`, your `Authorization` header should be set to: `Bearer abc123`.
+
+4. **Token Expiry and Renewal**:
+    - Tokens, depending on system settings, might have an expiry. If you encounter any authorization issues, an expired token might be the culprit.
+    - Simply log in again, retrieve a new token, and use this renewed token for upcoming requests.
+
+> **Important**: Tokens, being access keys to your system, demand utmost security. Ensure they're stored safely. Exposing them in client-side scripts or public repositories is highly discouraged.
 
 </details>
+
