@@ -59,7 +59,7 @@ router.post("/login", async (req, res) => {
   }, process.env.JWT_SECRET);
 
   // Set the token as an HttpOnly and Secure cookie
-  res.cookie('token', token, { httpOnly: true, secure: true });
+  res.cookie('LoginToken', token, { httpOnly: true, secure: true });
 
   res.json({ token, userID: user._id });
 });
