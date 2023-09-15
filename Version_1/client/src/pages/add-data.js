@@ -38,7 +38,7 @@ export const AddData = () => {
     event.preventDefault();
   
     // Fetch the token from the cookie (replace 'your_cookie_name' with the actual cookie name)
-    const token = getCookie('LoginToken');
+    const token = getCookie('access_token');
   
     try {
       const selectedClearanceLevel = data.clearance;
@@ -70,8 +70,13 @@ export const AddData = () => {
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) return parts.pop().split(';').shift();
+    if (parts.length === 2) {
+      const token = parts.pop().split(';').shift();
+      return token.trim(); //remove leading/trailing whitespaces
+    }
   }
+  
+  
   
   // Function to decode the JWT token
   function decodeToken(token) {
