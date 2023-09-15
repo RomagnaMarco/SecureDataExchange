@@ -35,31 +35,35 @@ router.post("/register", async (req, res) => {
     res.json({ message: "User Registered Successfully" });
 })
 
-// Placeholder for a login endpoint
+// login endpoint
 router.post("/login", async (req, res) => {
-    const { username, password } = req.body; //check login info
-    const user = await UserModel.findOne({ username: username }); //see if user exists
+  const { username, password } = req.body; // Check login info
+  const user = await UserModel.findOne({ username: username }); // See if user exists
 
-    if(!user) { //error handle non-existant user
-        return res.json({message: "User Doesn't Exist!" })
-    }
+  if (!user) { // Error handle non-existent user
+      return res.json({ message: "User Doesn't Exist!" })
+  }
 
-    //since we can't unhash somethng, we do the following
-    //check if what you entered, when hashed equals your hashed password. (since the algorithm will always return the same value)
-    //true is same, false is not.
-    const isPasswordValid = await bcrypt.compare(password, user.password)
+  // Since we can't unhash something, we do the following
+  // Check if what you entered, when hashed equals your hashed password. (since the algorithm will always return the same value)
+  // true is the same, false is not.
+  const isPasswordValid = await bcrypt.compare(password, user.password)
 
-    if (!isPasswordValid) //handle inccorect password
-        return res.json({message: "Username or Password is Incorrect! "})
+  if (!isPasswordValid) // Handle incorrect password
+      return res.json({ message: "Username or Password is Incorrect! " })
 
-    //make a webtoken
-    const token = jwt.sign({
-         id: user._id,
-         clearanceLevel: user.clearanceLevel
-    }, process.env.JWT_SECRET);
-    res.json({token, userID: user._id })
+  // Make a web token
+  const token = jwt.sign({
+      id: user._id,
+      clearanceLevel: user.clearanceLevel
+  }, process.env.JWT_SECRET);
 
+  // Set the token as an HttpOnly and Secure cookie
+  res.cookie('token', token, { httpOnly: true, secure: true });
+
+  res.json({ token, userID: user._id });
 });
+
 
 // Define the '/auth/check-clearance' route
 router.get('/check-clearance', async (req, res) => {
