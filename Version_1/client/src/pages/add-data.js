@@ -1,22 +1,28 @@
 import { useState } from "react";
 import axios from "axios";
 
+// Base UURL for API
+const BASE_URL = 'http://localhost:3000';
+
 // Function to check user's clearance level
 const checkClearance = async (clearanceLevel) => {
-  try {
-    const response = await axios.get(`/auth/check-clearance?clearanceLevel=${clearanceLevel}`);
-    return response.data.message;
-  } catch (error) {
-    console.error(error);
-    return 'Error occurred';
-  }
-};
+    try {
+      const response = await axios.get(`${BASE_URL}/auth/check-clearance?clearanceLevel=${clearanceLevel}`);
+      alert("Data Added");
+      return response.data.message;
+    } catch (err) {
+        console.error("Axios Error:", err);
+        alert("Error while submitting data.");
+      }
+  };
+  
+  
 
 // The add-data component definition
 export const AddData = () => {
   // Initialize the 'data' state to hold form inputs and tags
   const [data, setData] = useState({
-    clearance: "",
+    clearance: 0,
     description: "",
     tags: [],
     info: "",
