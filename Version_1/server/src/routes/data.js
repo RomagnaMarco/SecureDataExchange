@@ -9,7 +9,12 @@ import jwt from 'jsonwebtoken';  // Importing JSON Web Token for authentication
 function verifyClearance(requiredClearance) {
     return async (req, res, next) => {
         // Extract token from the authorization header
-        const token = req.headers.authorization.split(" ")[1];
+        const authorizationHeader = req.headers.authorization;
+        if (!authorizationHeader) {
+        return res.status(401).json({ message: 'Authorization header missing.' });
+        }
+
+        const token = authorizationHeader.split(" ")[1];
 
         try {
             // Decode the JWT token to get the user ID
