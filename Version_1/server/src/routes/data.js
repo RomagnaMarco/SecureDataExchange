@@ -117,22 +117,5 @@ router.get("/saved-data/ids", verifyClearance(0), async (req, res) => {
     }
 });
 
-// GET route to retrieve the actual saved data for the authenticated user
-router.get("/saved-data/", verifyClearance(0), async (req, res) => {
-    try {
-        // Retrieve user's saved data based on user ID from the decoded token
-        const user = await UserModel.findById(req.user._id);
-        const savedData = await DataModel.find({
-            _id: { $in: user.savedData },
-            clearanceLevel: { $lte: req.user.clearanceLevel }  // Ensure the data's clearance level is accessible by the user
-        });
-        
-        res.json({ savedData });
-    } catch (err) {
-        // Error handling for fetching saved data
-        res.status(500).json({ message: "Internal server error", error: err });
-    }
-});
-
 // Export the router so it can be mounted in the main server/application
 export { router as dataRouter };

@@ -1,23 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
 
-// Base UURL for API
-const BASE_URL = 'http://localhost:3000';
-
-// Function to check user's clearance level
-const checkClearance = async (clearanceLevel) => {
-    try {
-      const response = await axios.get(`${BASE_URL}/auth/check-clearance?clearanceLevel=${clearanceLevel}`);
-      alert("Data Added");
-      return response.data.message;
-    } catch (err) {
-        console.error("Axios Error:", err);
-        alert("Error while submitting data.");
-      }
-  };
-  
-  
-
 // The add-data component definition
 export const AddData = () => {
   // Initialize the 'data' state to hold form inputs and tags
@@ -53,29 +36,54 @@ export const AddData = () => {
   // Handle data submission
   const handleSubmitData = async (event) => {
     event.preventDefault();
-
-    const selectedClearanceLevel = data.clearance;
-    const userClearanceLevel = await checkClearance(selectedClearanceLevel);
-
-    if (userClearanceLevel === 'Error occurred') {
-      alert("Error while checking clearance. Please try again.");
-      return;
-    }
-
-    if (userClearanceLevel === 'Insufficient clearance level.') {
-      alert("Insufficient clearance level to submit this data.");
-      return;
-    }
-
+  
+    // Fetch the token from the cookie (replace 'your_cookie_name' with the actual cookie name)
+    const token = getCookie('LoginToken');
+  
     try {
-      // Send a POST request to submit the data
-      await axios.post("http://localhost:3001/data", data);
+      const selectedClearanceLevel = data.clearance;
+      
+      // Decode the token to access the user's clearance level
+      const decodedToken = decodeToken(token);
+  
+      // Check if the user's clearance level is sufficient
+      if (decodedToken.clearanceLevel < selectedClearanceLevel) {
+        alert("Insufficient clearance level to submit this data.");
+        return;
+      }
+  
+      // Continue with the data submission
+      const response = await axios.post("http://localhost:3001/data", data, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
+          'Content-Type': 'application/json', // Set the content type to JSON
+        },
+      });
       alert("Data Added");
     } catch (err) {
       console.error(err);
       alert("Error while submitting data.");
     }
   };
+  
+  // Function to get a cookie by name
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+  
+  // Function to decode the JWT token
+  function decodeToken(token) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+  
+    return JSON.parse(jsonPayload);
+  }
+  
 
   return (
     <div className="add-data">
