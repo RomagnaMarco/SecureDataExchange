@@ -64,47 +64,6 @@ router.post("/login", async (req, res) => {
   res.json({ token, userID: user._id });
 });
 
-
-// Define the '/auth/check-clearance' route
-router.get('/check-clearance', async (req, res) => {
-    // Extract the requested clearance level from the query parameters
-    const requestedClearanceLevel = parseInt(req.query.clearanceLevel);
-  
-    // Verify the user's JWT token
-    const token = req.header('Authorization'); // Assuming you send the token in the 'Authorization' header
-  
-    if (!token) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-  
-    try {
-      // Verify the token and decode the user information
-      jwt.verify(token, process.env.JWT_SECRET, async (err, decoded) => {
-        if (err) {
-          return res.status(403).json({ message: 'Token is not valid' });
-        }
-  
-        // Fetch the user's clearance level from the database based on the decoded user ID
-        const user = await UserModel.findById(decoded.id);
-  
-        if (!user) {
-          return res.status(404).json({ message: 'User not found.' });
-        }
-  
-        const userClearanceLevel = user.clearanceLevel;
-  
-        // Compare the user's clearance level with the requested clearance level
-        if (userClearanceLevel >= requestedClearanceLevel) {
-          res.json({ message: 'Clearance level is sufficient.' });
-        } else {
-          res.json({ message: 'Insufficient clearance level.' });
-        }
-      });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: 'Internal server error.' });
-    }
-  });
   
 // Export the router to be used in the main server file
 export { router as userRouter }
