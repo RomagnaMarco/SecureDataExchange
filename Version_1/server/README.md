@@ -88,7 +88,7 @@ The SecureDataExchange API offers secure endpoints for user registration and log
 </details>
 
 <details>
-<summary><h2>🔧 Using Insomnia</h2></summary>
+<summary><h2>🔧 Using Insomnia (Basics) </h2></summary>
 
 Insomnia is a powerful tool for testing API endpoints. It provides a clean interface to set up requests, view responses, and diagnose network operations. Here's a quick guide to get you started:
 
@@ -102,5 +102,54 @@ Insomnia is a powerful tool for testing API endpoints. It provides a clean inter
     - If necessary, configure the body of the request:
       - Ensure the body type is set to `JSON`.
       - Enter the relevant JSON payload.
+</details>
+
+<details>
+<summary><h2> Handling Authorization with Insomnia </h2></summary>
+
+To ensure secure access and respect clearance levels for certain requests, it's imperative to properly handle authorization. Follow these detailed steps for optimal security:
+
+1. **Log in as a User**: 
+    - Start by initiating a login request for the user you're testing with.
+    - Upon a successful login, the response will provide a token. This token represents the user's session and also embeds their clearance level.
+
+2. **Check Clearance Level**:
+    - Before proceeding, verify the user's clearance level. Make sure it aligns with the requirements of the specific endpoint you aim to test. Different endpoints might necessitate different clearance levels.
+
+3. **Setting the Authorization Header**:
+    - For authenticated requests, inclusion of the `Authorization` header is a must.
+    - This header should be structured as: `Bearer YOUR_RECEIVED_TOKEN`.
+    - For clarity, if you have a token like `abc123`, your `Authorization` header should be set to: `Bearer abc123`.
+
+4. **Token Expiry and Renewal**:
+    - Tokens, depending on system settings, might have an expiry. If you encounter any authorization issues, an expired token might be the culprit.
+    - Simply log in again, retrieve a new token, and use this renewed token for upcoming requests.
+
+> **Important**: Tokens, being access keys to your system, demand utmost security. Ensure they're stored safely. Exposing them in client-side scripts or public repositories is highly discouraged.
 
 </details>
+
+<details>
+<summary><h2>🔍 Checking Local Storage</h2></summary>
+
+Local storage is a web browser's feature that allows you to store key-value pairs in a persistent manner. In our application, we store certain data, like the user's ID, in local storage for quicker access upon subsequent visits or interactions.
+
+### How to Inspect Stored Data in Local Storage:
+
+1. **Access Developer Tools**:
+   - Right-click on any part of our frontend webpage.
+   - Select `Inspect` or `Inspect Element` from the dropdown menu.
+
+2. **Navigate to the Application Tab**:
+   - Within the Developer Tools, locate and click on the `Application` tab.
+
+3. **View Local Storage Data**:
+   - In the left sidebar of the `Application` tab, click on `Local Storage`. This will expand to show all domains for which data is stored.
+   - Select your website's domain. You should now see a table displaying all the key-value pairs stored in local storage for your domain.
+   - Here, you can locate the `userID` key to see its corresponding value.
+
+> **Note**: Always exercise caution when dealing with local storage, especially if storing sensitive data. Although data in local storage persists even after the browser is closed, it can be inspected by anyone with access to the browser.
+
+</details>
+
+
