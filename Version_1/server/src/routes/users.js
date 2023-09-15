@@ -61,5 +61,32 @@ router.post("/login", async (req, res) => {
 
 });
 
+// Define the '/auth/check-clearance' route in the user.js file
+router.get('/check-clearance', async (req, res) => {
+    // Extract the requested clearance level from the query parameters
+    const requestedClearanceLevel = parseInt(req.query.clearanceLevel);
+    const userId = req.user.id;
+  
+    try {
+      const user = await UserModel.findById(userId);
+  
+      if (!user) {
+        return res.status(404).json({ message: 'User not found.' });
+      }
+  
+      const userClearanceLevel = user.clearanceLevel;
+  
+      // Compare the user's clearance level with the requested clearance level
+      if (userClearanceLevel >= requestedClearanceLevel) {
+        res.json({ message: 'Clearance level is sufficient.' });
+      } else {
+        res.json({ message: 'Insufficient clearance level.' });
+      }
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error.' });
+    }
+  });
+  
 // Export the router to be used in the main server file
 export { router as userRouter }
