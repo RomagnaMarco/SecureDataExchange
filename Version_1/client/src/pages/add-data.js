@@ -75,6 +75,9 @@ export const AddData = () => {
   
   // Function to decode the JWT token
   function decodeToken(token) {
+    if (!token) {
+      throw new Error('Token not found.'); 
+    }
     const base64Url = token.split('.')[1];
     const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
     const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
