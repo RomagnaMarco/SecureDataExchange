@@ -6,6 +6,7 @@ import mongoose from "mongoose";
 const DataSchema = new mongoose.Schema({
     clearanceLevel: {
          type: Number,
+         default: 0,
         required: true,
         enum: [0, 1, 2, 3], //only values allowed
          },

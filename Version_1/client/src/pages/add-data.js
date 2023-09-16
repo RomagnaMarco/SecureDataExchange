@@ -5,6 +5,7 @@ import { useGetToken } from "../components/hooks/useGetToken";
 
 // The add-data component definition
 export const AddData = () => {
+  
   // use hook to get UserID
   const userID = useGetUserID();
   // use hook for token
@@ -42,52 +43,62 @@ export const AddData = () => {
   };
 
   // Handle data submission
-  // Handle data submission
-const handleSubmitData = async (event) => {
-  event.preventDefault();
-
-  try {
-    const selectedClearanceLevel = data.clearance;
-
-    // Check if 'description' is empty or null
-    if (!data.description) {
-      alert("Description is required.");
-      return;
+  const handleSubmitData = async (event) => {
+    event.preventDefault();
+  
+    try {
+      const selectedClearanceLevel = data.clearance;
+  
+      // Check if 'description' is empty or null
+      if (!data.description) {
+        alert("Description is required.");
+        return;
+      }
+  
+      // Decode the token pulled from our hook to access the user's clearance level
+      const decodedToken = decodeToken(token);
+  
+      // Check if the user's clearance level is sufficient
+      if (decodedToken.clearanceLevel < selectedClearanceLevel) {
+        alert("Insufficient clearance level to submit this data.");
+        return;
+      }
+  
+      // Ensure data being sent is in the correct format.
+      const dataToSend = {
+        clearance: selectedClearanceLevel,
+        description: data.description,
+        tags: data.tags,
+        info: data.info,
+        userOwner: data.userOwner,
+      };
+  
+      // Continue with the data submission
+      const response = await axios.post("http://localhost:3001/data", dataToSend, {
+        headers: {
+          Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
+          "Content-Type": "application/json", // Set the content type to JSON
+        },
+      });
+  
+      // Log the response data
+      console.log("Server Response:", response.data);
+  
+      // Check for any errors in the server response
+      if (response.data.error) {
+        // Handle server-side errors
+        console.error("Server Error:", response.data.error);
+        alert("Error while submitting data. Server returned an error.");
+      } else {
+        alert("Data Added");
+      }
+    } catch (err) {
+      console.error("Client Error:", err);
+  
+      // Handle client-side errors
+      alert("Error while submitting data. An error occurred on the client.");
     }
-
-    // Decode the token pulled from our hook to access the user's clearance level
-    const decodedToken = decodeToken(token);
-
-    // Check if the user's clearance level is sufficient
-    if (decodedToken.clearanceLevel < selectedClearanceLevel) {
-      alert("Insufficient clearance level to submit this data.");
-      return;
-    }
-
-    // Continue with the data submission
-    const response = await axios.post("http://localhost:3001/data", data, {
-      headers: {
-        Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
-        "Content-Type": "application/json", // Set the content type to JSON
-      },
-    });
-
-    // Log the response data
-    console.log("Server Response:", response.data);
-
-    // Check for any errors in the server response
-    if (response.data.error) {
-      // Handle server-side errors
-      console.error("Server Error:", response.data.error);
-      alert("Error while submitting data.");
-    } else {
-      alert("Data Added");
-    }
-  } catch (err) {
-    console.error("Client Error:", err);
-    alert("Error while submitting data.");
-  }
-};
+  };
 
   // Function to decode the JWT token
   function decodeToken(token) {
@@ -107,8 +118,6 @@ const handleSubmitData = async (event) => {
 
     return JSON.parse(jsonPayload);
   }
-
-  //console.log(data); //for troubleshooting. real time makes sure code is updating with data being filled in.
 
   return (
     <div className="add-data">
