@@ -3,57 +3,64 @@ import axios from "axios";
 
 import { useGetUserID } from "../components/hooks/useGetUserID";
 import { useGetToken } from "../components/hooks/useGetToken";
-import useDecodedToken from "../components/hooks/useDecodedToken";
+import  useDecodedToken from "../components/hooks/useDecodedToken"
 
-// The Home component definition
 export const Home = () => {
-
     const [data, setData] = useState([]);
-    // use hook to get UserID
     const userID = useGetUserID();
-    // use hook for token
     const token = useGetToken();
-    // use hook for decododToken
     const decodedToken = useDecodedToken(token);
 
-    const userClearanceLevel = decodedToken.clearanceLevel;
+    let userClearanceLevel;
+    if (decodedToken && decodedToken.clearanceLevel) {
+        userClearanceLevel = decodedToken.clearanceLevel;
+    }
 
+    useEffect(() => {
+        const fetchData = async () => {
+            if (!token || !userClearanceLevel) {
+                return;
+            }
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        // Make an HTTP GET request to your server to fetch the data
-        const response = await axios.get("http://localhost:3001/data", {
-          headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
-            "Clearance-Level": userClearanceLevel, // Include the clearance level as a custom header
-          },
-        });
+            try {
+                const response = await axios.get("http://localhost:3001/data", {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Clearance-Level": userClearanceLevel,
+                    },
+                });
 
-        // Check if the request was successful
-        if (response.status === 200) {
-          // Assuming your server returns an array of data objects
-          const responseData = response.data;
+                if (response.status === 200) {
+                    setData(response.data);
+                } else {
+                    console.error("Error fetching data.");
+                }
+            } catch (error) {
+                console.error("Error:", error);
+            }
+        };
 
-          // Update the 'data' state with the received data
-          setData(responseData);
-        } else {
-          // Handle any errors or unexpected responses here
-          console.error("Error fetching data.");
-        }
-      } catch (error) {
-        // Handle any network or client-side errors here
-        console.error("Error:", error);
-      }
-    };
+        fetchData();
+    }, [token, userClearanceLevel]);
 
-    // Call the fetchData function when the component mounts
-    fetchData();
-  }, [token, userClearanceLevel]); // Include the token and userClearanceLevel in the dependency array
+    if (!decodedToken) {
+        return <div>Access Denied. Please Log In.</div>;
+    }
 
-  return (
-    <div>
-      <h2>Home</h2>
-    </div>
-  );
+    if (!userClearanceLevel) {
+        return <div>You do not have the necessary clearance.</div>;
+    }
+
+    return (
+        <div>
+            <h2>Home</h2>
+            {/* Display the data here */}
+            {data.map((item, index) => (
+                <div key={index}>
+                    {/* Assuming data contains 'name' property as an example */}
+                    {item.name}
+                </div>
+            ))}
+        </div>
+    );
 };
