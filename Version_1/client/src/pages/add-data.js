@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { useGetUserID } from "../components/hooks/useGetUserID";
 import { useGetToken } from "../components/hooks/useGetToken";
-import { useDecodedToken } from "../components/hooks/useDecodedToken"
+import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useNavigate } from 'react-router-dom'
 
 // The add-data component definition
