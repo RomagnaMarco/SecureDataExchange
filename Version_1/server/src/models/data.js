@@ -4,7 +4,11 @@ import mongoose from "mongoose";
 // Defining a schema for the Data collection in MongoDB.
 // The schema describes the structure of the documents within this collection.
 const DataSchema = new mongoose.Schema({
-    clearanceLevel: { type: Number, required: true },
+    clearanceLevel: {
+         type: Number,
+        required: true,
+        enum: [0, 1, 2, 3], //only values allowed
+         },
     description: { type: String, required: true },
     tags: [{ type: String, required: true }], // Array of strings for tags
     info: { type: String, required: false },
