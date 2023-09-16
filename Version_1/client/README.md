@@ -73,7 +73,7 @@ In the SecureDataExchange application, user permissions and visibility are gover
 - **Permissions**:
   - **GET**: Users can retrieve information.
   - **POST**: Users can add or submit new information.
-  - **PUT**: Users can modify or update existing information.
+  - **PUT**: Users can modify or update existing information. This includes saving data.
 - **Restrictions**: Even though they have more access, some functionalities or data might still be restricted.
 
 ### `Level 3` (Admins)
