@@ -5,10 +5,9 @@ import { useGetToken } from "../components/hooks/useGetToken";
 
 // The add-data component definition
 export const AddData = () => {
-  
-  //use hook to get UserID
+  // use hook to get UserID
   const userID = useGetUserID();
-  //use hook for token
+  // use hook for token
   const token = useGetToken();
 
   // Initialize the 'data' state to hold form inputs and tags
@@ -45,45 +44,60 @@ export const AddData = () => {
   // Handle data submission
   const handleSubmitData = async (event) => {
     event.preventDefault();
-  
 
     try {
       const selectedClearanceLevel = data.clearance;
-      
+
       // Decode the token pulled from our hook to access the user's clearance level
       const decodedToken = decodeToken(token);
-  
+
       // Check if the user's clearance level is sufficient
       if (decodedToken.clearanceLevel < selectedClearanceLevel) {
         alert("Insufficient clearance level to submit this data.");
         return;
       }
-  
+
       // Continue with the data submission
-      await axios.post("http://localhost:3001/data", data, {
+      const response = await axios.post("http://localhost:3001/data", data, {
         headers: {
           Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
-          'Content-Type': 'application/json', // Set the content type to JSON
+          "Content-Type": "application/json", // Set the content type to JSON
         },
       });
-      alert("Data Added");
+
+      // Log the response data
+      console.log("Server Response:", response.data);
+
+      // Check for any errors in the server response
+      if (response.data.error) {
+        // Handle server-side errors
+        console.error("Server Error:", response.data.error);
+        alert("Error while submitting data.");
+      } else {
+        alert("Data Added");
+      }
     } catch (err) {
-      console.error(err);
+      console.error("Client Error:", err);
       alert("Error while submitting data.");
     }
   };
-  
+
   // Function to decode the JWT token
   function decodeToken(token) {
     if (!token) {
-      throw new Error('Token not found.'); 
+      throw new Error("Token not found.");
     }
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-  
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join("")
+    );
+
     return JSON.parse(jsonPayload);
   }
   
