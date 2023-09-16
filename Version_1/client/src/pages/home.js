@@ -4,6 +4,22 @@ import axios from "axios";
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 
+const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        timeZone: 'America/Los_Angeles',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        timeZoneName: 'short'
+    });
+}
+
+
+
 const DataItem = ({ item }) => {
     return (
         <li key={item._id}>
@@ -17,7 +33,7 @@ const DataItem = ({ item }) => {
                 <p>{item.tags.join(', ')}</p>
             </div>
             <div>
-                <p>{item.date}</p>
+                <p>{formatDate(item.date)}</p>
             </div>
             <div className="information">
                 <p>{item.info ? item.info : "No information available"}</p>
@@ -25,6 +41,10 @@ const DataItem = ({ item }) => {
         </li>
     );
 }
+
+
+
+
 
 export const Home = () => {
     const [data, setData] = useState([]);
