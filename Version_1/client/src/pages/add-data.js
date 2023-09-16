@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useGetUserID } from "../components/hooks/useGetUserID";
 import { useGetToken } from "../components/hooks/useGetToken";
+import { useNavigate } from 'react-router-dom'
 
 // The add-data component definition
 export const AddData = () => {
@@ -19,6 +20,8 @@ export const AddData = () => {
     info: "",
     userOwner: userID,
   });
+
+  const navigate = useNavigate()
 
   // Array of clearance levels (0-3)
   const clearanceLevels = [0, 1, 2, 3];
@@ -91,6 +94,7 @@ export const AddData = () => {
         alert("Error while submitting data. Server returned an error.");
       } else {
         alert("Data Added");
+        navigate("/") //go back to home page
       }
     } catch (err) {
       console.error("Client Error:", err);
