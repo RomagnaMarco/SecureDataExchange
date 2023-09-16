@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
+
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 
@@ -17,31 +18,7 @@ const formatDate = (dateString) => {
     });
 }
 
-const DataItem = ({ item, token, userClearanceLevel }) => {
-
-    const saveData = async (dataID) => {
-        try {
-            const response = await axios.put("http://localhost:3001/data", { dataID }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
-
-            if (response.status === 200) {
-                alert("Data saved successfully!");
-            } else {
-                alert("Error saving data.");
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 403) {
-                alert("You don't have permission to save this data.");
-            } else {
-                alert("An error occurred while saving data.");
-            }
-            console.error("Error:", error);
-        }
-    }
-
+const DataItem = ({ item, saveData, userClearanceLevel }) => {
     return (
         <li key={item._id}>
             <div>
@@ -64,7 +41,6 @@ const DataItem = ({ item, token, userClearanceLevel }) => {
     );
 }
 
-
 export const Home = () => {
     const [data, setData] = useState([]);
     const token = useGetToken();
@@ -73,6 +49,29 @@ export const Home = () => {
     let userClearanceLevel;
     if (decodedToken && decodedToken.clearanceLevel) {
         userClearanceLevel = decodedToken.clearanceLevel;
+    }
+
+    const saveData = async (dataID) => {
+        try {
+            const response = await axios.put("http://localhost:3001/data", { dataID }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+
+            if (response.status === 200) {
+                alert("Data saved successfully!");
+            } else {
+                alert("Error saving data.");
+            }
+        } catch (error) {
+            if (error.response && error.response.status === 403) {
+                alert("You don't have permission to save this data.");
+            } else {
+                alert("An error occurred while saving data.");
+            }
+            console.error("Error:", error);
+        }
     }
 
     useEffect(() => {
@@ -113,9 +112,12 @@ export const Home = () => {
     return (
         <div>
             <h1>Home</h1>
-            <h2>Your clearance level: {userClearanceLevel}</h2>
+            
+            {/* Displaying the user's clearance level directly */}
+            <p>Your clearance level: {userClearanceLevel}</p>
+
             <ul>
-                {data.map(item => <DataItem key={item._id} item={item} token={token} userClearanceLevel={userClearanceLevel} />)}
+                {data.map(item => <DataItem key={item._id} item={item} saveData={saveData} userClearanceLevel={userClearanceLevel} />)}
             </ul>
         </div>
     );
