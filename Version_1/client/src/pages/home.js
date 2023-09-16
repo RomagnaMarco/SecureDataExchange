@@ -18,6 +18,7 @@ const formatDate = (dateString) => {
 }
 
 const DataItem = ({ item, token, userClearanceLevel }) => {
+
     const saveData = async (dataID) => {
         try {
             const response = await axios.put("http://localhost:3001/data", { dataID }, {
@@ -27,12 +28,16 @@ const DataItem = ({ item, token, userClearanceLevel }) => {
             });
 
             if (response.status === 200) {
-                console.log("Data saved successfully:", response.data);
-                // You can add more functionality here like updating the UI or providing feedback to the user
+                alert("Data saved successfully!");
             } else {
-                console.error("Error saving data.");
+                alert("Error saving data.");
             }
         } catch (error) {
+            if (error.response && error.response.status === 403) {
+                alert("You don't have permission to save this data.");
+            } else {
+                alert("An error occurred while saving data.");
+            }
             console.error("Error:", error);
         }
     }
@@ -58,6 +63,7 @@ const DataItem = ({ item, token, userClearanceLevel }) => {
         </li>
     );
 }
+
 
 export const Home = () => {
     const [data, setData] = useState([]);
@@ -107,7 +113,7 @@ export const Home = () => {
     return (
         <div>
             <h1>Home</h1>
-            <p>Your clearance level: {userClearanceLevel}</p>
+            <h2>Your clearance level: {userClearanceLevel}</h2>
             <ul>
                 {data.map(item => <DataItem key={item._id} item={item} token={token} userClearanceLevel={userClearanceLevel} />)}
             </ul>
