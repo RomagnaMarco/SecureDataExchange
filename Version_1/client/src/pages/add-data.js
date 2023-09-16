@@ -1,19 +1,24 @@
 import { useState } from "react";
 import axios from "axios";
 import { useGetUserID } from "../components/hooks/useGetUserID";
+import { useGetToken } from "../components/hooks/useGetToken";
 
 // The add-data component definition
 export const AddData = () => {
+  
+  //use hook to get UserID
+  const userID = useGetUserID();
+  //use hook for token
+  const token = useGetToken();
+
   // Initialize the 'data' state to hold form inputs and tags
   const [data, setData] = useState({
     clearance: 0,
     description: "",
     tags: [],
     info: "",
+    userOwner: userID,
   });
-
-  //use hook to get UserID
-  const userID = useGetUserID();
 
   // Array of clearance levels (0-3)
   const clearanceLevels = [0, 1, 2, 3];
@@ -41,13 +46,11 @@ export const AddData = () => {
   const handleSubmitData = async (event) => {
     event.preventDefault();
   
-    // Fetch the token from the cookie (replace 'your_cookie_name' with the actual cookie name)
-    const token = getCookie('access_token');
-  
+
     try {
       const selectedClearanceLevel = data.clearance;
       
-      // Decode the token to access the user's clearance level
+      // Decode the token pulled from our hook to access the user's clearance level
       const decodedToken = decodeToken(token);
   
       // Check if the user's clearance level is sufficient
