@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+
 import { useGetUserID } from "../components/hooks/useGetUserID";
 import { useGetToken } from "../components/hooks/useGetToken";
+import { useDecodedToken } from "../components/hooks/useDecodedToken"
 import { useNavigate } from 'react-router-dom'
 
 // The add-data component definition
@@ -11,6 +13,10 @@ export const AddData = () => {
   const userID = useGetUserID();
   // use hook for token
   const token = useGetToken();
+  
+  // Decode the token pulled from our hook to access the user's clearance level
+  const decodedToken = useDecodedToken(token);
+  
 
   // Initialize the 'data' state to hold form inputs and tags
   const [data, setData] = useState({
@@ -58,9 +64,6 @@ export const AddData = () => {
         return;
       }
   
-      // Decode the token pulled from our hook to access the user's clearance level
-      const decodedToken = decodeToken(token);
-  
       // Check if the user's clearance level is sufficient
       if (decodedToken.clearanceLevel < selectedClearanceLevel) {
         alert("Insufficient clearance level to submit this data.");
@@ -103,25 +106,6 @@ export const AddData = () => {
       alert("Error while submitting data. An error occurred on the client.");
     }
   };
-
-  // Function to decode the JWT token
-  function decodeToken(token) {
-    if (!token) {
-      throw new Error("Token not found.");
-    }
-    const base64Url = token.split(".")[1];
-    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-    const jsonPayload = decodeURIComponent(
-      atob(base64)
-        .split("")
-        .map(function (c) {
-          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
-        })
-        .join("")
-    );
-
-    return JSON.parse(jsonPayload);
-  }
 
   return (
     <div className="add-data">
