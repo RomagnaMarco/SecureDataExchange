@@ -1,5 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
+import { useGetUserID } from "../components/hooks/useGetUserID";
 
 // The add-data component definition
 export const AddData = () => {
@@ -10,6 +11,9 @@ export const AddData = () => {
     tags: [],
     info: "",
   });
+
+  //use hook to get UserID
+  const userID = useGetUserID();
 
   // Array of clearance levels (0-3)
   const clearanceLevels = [0, 1, 2, 3];
@@ -53,7 +57,7 @@ export const AddData = () => {
       }
   
       // Continue with the data submission
-      const response = await axios.post("http://localhost:3001/data", data, {
+      await axios.post("http://localhost:3001/data", data, {
         headers: {
           Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
           'Content-Type': 'application/json', // Set the content type to JSON
@@ -92,6 +96,7 @@ export const AddData = () => {
     return JSON.parse(jsonPayload);
   }
   
+  //console.log(data); //for troubleshooting. real time makes sure code is updating with data being filled in.
 
   return (
     <div className="add-data">
