@@ -87,7 +87,7 @@ router.put("/", verifyClearance(2), async (req, res) => {
         
         // Ensure the user has sufficient clearance to update the data
         if (req.user.clearanceLevel < data.clearanceLevel) {
-            return res.status(403).json({ message: "Insufficient clearance level to update this data." });
+            return res.status(403).json({ message: "Insufficient clearance level to save this data." });
         }
 
         // Fetch user's current savedData

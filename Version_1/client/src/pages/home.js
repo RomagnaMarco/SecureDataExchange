@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 
@@ -18,9 +17,26 @@ const formatDate = (dateString) => {
     });
 }
 
+const DataItem = ({ item, token, userClearanceLevel }) => {
+    const saveData = async (dataID) => {
+        try {
+            const response = await axios.put("http://localhost:3001/data", { dataID }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
 
+            if (response.status === 200) {
+                console.log("Data saved successfully:", response.data);
+                // You can add more functionality here like updating the UI or providing feedback to the user
+            } else {
+                console.error("Error saving data.");
+            }
+        } catch (error) {
+            console.error("Error:", error);
+        }
+    }
 
-const DataItem = ({ item }) => {
     return (
         <li key={item._id}>
             <div>
@@ -38,13 +54,10 @@ const DataItem = ({ item }) => {
             <div className="information">
                 <p>{item.info ? item.info : "No information available"}</p>
             </div>
+            {userClearanceLevel >= 2 && <button onClick={() => saveData(item._id)}> Save Data </button>}
         </li>
     );
 }
-
-
-
-
 
 export const Home = () => {
     const [data, setData] = useState([]);
@@ -94,12 +107,9 @@ export const Home = () => {
     return (
         <div>
             <h1>Home</h1>
-            
-            {/* Displaying the user's clearance level directly */}
             <p>Your clearance level: {userClearanceLevel}</p>
-
             <ul>
-                {data.map(item => <DataItem key={item._id} item={item} />)}
+                {data.map(item => <DataItem key={item._id} item={item} token={token} userClearanceLevel={userClearanceLevel} />)}
             </ul>
         </div>
     );
