@@ -11,16 +11,16 @@ const DataItem = ({ item }) => {
                 <h2>{item.description}</h2>
             </div>
             <div>
-                <p>Item's clearance level: {item.userClearanceLevel}</p>
+                <p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p>
             </div>
             <div>
-                <p>{item.tags}</p>
+                <p>{item.tags.join(', ')}</p>
             </div>
             <div>
                 <p>{item.date}</p>
             </div>
             <div className="information">
-                <p>{item.information}</p>
+                <p>{item.info ? item.info : "No information available"}</p>
             </div>
         </li>
     );
