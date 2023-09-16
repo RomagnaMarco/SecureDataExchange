@@ -1,13 +1,33 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-import { useGetUserID } from "../components/hooks/useGetUserID";
 import { useGetToken } from "../components/hooks/useGetToken";
-import  useDecodedToken from "../components/hooks/useDecodedToken"
+import useDecodedToken from "../components/hooks/useDecodedToken";
+
+const DataItem = ({ item }) => {
+    return (
+        <li key={item._id}>
+            <div>
+                <h2>{item.description}</h2>
+            </div>
+            <div>
+                <p>Item's clearance level: {item.userClearanceLevel}</p>
+            </div>
+            <div>
+                <p>{item.tags}</p>
+            </div>
+            <div>
+                <p>{item.date}</p>
+            </div>
+            <div className="information">
+                <p>{item.information}</p>
+            </div>
+        </li>
+    );
+}
 
 export const Home = () => {
     const [data, setData] = useState([]);
-    const userID = useGetUserID();
     const token = useGetToken();
     const decodedToken = useDecodedToken(token);
 
@@ -53,14 +73,14 @@ export const Home = () => {
 
     return (
         <div>
-            <h2>Home</h2>
-            {/* Display the data here */}
-            {data.map((item, index) => (
-                <div key={index}>
-                    {/* Assuming data contains 'name' property as an example */}
-                    {item.name}
-                </div>
-            ))}
+            <h1>Home</h1>
+            
+            {/* Displaying the user's clearance level directly */}
+            <p>Your clearance level: {userClearanceLevel}</p>
+
+            <ul>
+                {data.map(item => <DataItem key={item._id} item={item} />)}
+            </ul>
         </div>
     );
 };
