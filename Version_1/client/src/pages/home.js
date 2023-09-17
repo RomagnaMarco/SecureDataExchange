@@ -20,9 +20,10 @@ const formatDate = (dateString) => {
     });
 }
 
-const DataItem = ({ item, saveData, userClearanceLevel }) => {
+const DataItem = ({ item, saveData, userClearanceLevel,savedData =[] }) => {
     return (
         <li key={item._id}>
+            {savedData.includes(item._id) && <h1> ALREADY SAVED </h1>}
             <div>
                 <h2>{item.description}</h2>
             </div>
@@ -45,6 +46,7 @@ const DataItem = ({ item, saveData, userClearanceLevel }) => {
 
 export const Home = () => {
     const [data, setData] = useState([]);
+    const [savedData, setSavedData] = useState([]);
     const userID = useGetUserID();
     const token = useGetToken();
     const decodedToken = useDecodedToken(token);
@@ -100,13 +102,39 @@ export const Home = () => {
                 } else {
                     console.error("Error fetching data.");
                 }
-            } catch (error) {
-                console.error("Error:", error);
+            } catch (err) {
+                console.error("Error:", err);
             }
         };
 
+        const fetchSavedData = async () => {
+            if (!token || !userClearanceLevel) {
+                return;
+            }
+        
+            try {
+                const response = await axios.get(`http://localhost:3001/data/saved-data/ids/${userID}`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                        "Clearance-Level": userClearanceLevel,
+                    },
+                });
+        
+                if (response.status === 200) {
+                    setSavedData(response.data.savedData);
+                } else {
+                    console.error("Error fetching data.");
+                }
+            } catch (err) {
+                console.error("Error:", err);
+            }
+        };
+        
+
         fetchData();
-    }, [token, userClearanceLevel]);
+        fetchSavedData();
+
+    }, [token, userClearanceLevel, userID]);
 
     if (!decodedToken) {
         return <div>Access Denied. Please Log In.</div>;
@@ -124,7 +152,14 @@ export const Home = () => {
             <p>Your clearance level: {userClearanceLevel}</p>
 
             <ul>
-                {data.map(item => <DataItem key={item._id} item={item} saveData={saveData} userClearanceLevel={userClearanceLevel} />)}
+                {data.map(item => 
+                    <DataItem key={item._id}
+                        item={item}
+                        saveData={saveData}
+                        userClearanceLevel={userClearanceLevel}
+                        savedData={savedData}
+                    />
+                )}
             </ul>
         </div>
     );
