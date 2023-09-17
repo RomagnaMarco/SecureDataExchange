@@ -5,7 +5,6 @@ import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useGetUserID } from "../components/hooks/useGetUserID";
 
-
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
@@ -20,7 +19,7 @@ const formatDate = (dateString) => {
     });
 }
 
-const DataItem = ({ item, saveData, userClearanceLevel,savedData =[] }) => {
+const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
     return (
         <li key={item._id}>
             {savedData.includes(item._id) && <h1> ALREADY SAVED </h1>}
@@ -44,6 +43,28 @@ const DataItem = ({ item, saveData, userClearanceLevel,savedData =[] }) => {
     );
 }
 
+const makeApiCall = async (url, token, userClearanceLevel, userID = null) => {
+    if (!token || !userClearanceLevel) return null;
+
+    try {
+        const headers = {
+            Authorization: `Bearer ${token}`,
+            "Clearance-Level": userClearanceLevel,
+        };
+
+        const response = await axios.get(userID ? `${url}/${userID}` : url, { headers });
+        if (response.status !== 200) {
+            console.error("Error fetching data.");
+            return null;
+        }
+        return response.data;
+
+    } catch (err) {
+        console.error("Error:", err);
+        return null;
+    }
+}
+
 export const Home = () => {
     const [data, setData] = useState([]);
     const [savedData, setSavedData] = useState([]);
@@ -51,17 +72,13 @@ export const Home = () => {
     const token = useGetToken();
     const decodedToken = useDecodedToken(token);
 
-    let userClearanceLevel;
-    if (decodedToken && decodedToken.clearanceLevel) {
-        userClearanceLevel = decodedToken.clearanceLevel;
-    }
+    const userClearanceLevel = decodedToken?.clearanceLevel;
 
     const saveData = async (dataID) => {
         try {
             const response = await axios.put("http://localhost:3001/data", { 
                 dataID,
                 userID,
-
              }, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -85,55 +102,17 @@ export const Home = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            if (!token || !userClearanceLevel) {
-                return;
-            }
-
-            try {
-                const response = await axios.get("http://localhost:3001/data", {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Clearance-Level": userClearanceLevel,
-                    },
-                });
-
-                if (response.status === 200) {
-                    setData(response.data);
-                } else {
-                    console.error("Error fetching data.");
-                }
-            } catch (err) {
-                console.error("Error:", err);
-            }
+            const result = await makeApiCall("http://localhost:3001/data", token, userClearanceLevel);
+            if (result) setData(result);
         };
 
         const fetchSavedData = async () => {
-            if (!token || !userClearanceLevel) {
-                return;
-            }
-        
-            try {
-                const response = await axios.get(`http://localhost:3001/data/saved-data/ids/${userID}`, {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                        "Clearance-Level": userClearanceLevel,
-                    },
-                });
-        
-                if (response.status === 200) {
-                    setSavedData(response.data.savedData);
-                } else {
-                    console.error("Error fetching data.");
-                }
-            } catch (err) {
-                console.error("Error:", err);
-            }
+            const result = await makeApiCall("http://localhost:3001/data/saved-data/ids", token, userClearanceLevel, userID);
+            if (result && result.savedData) setSavedData(result.savedData);
         };
-        
 
         fetchData();
         fetchSavedData();
-
     }, [token, userClearanceLevel, userID]);
 
     if (!decodedToken) {
@@ -147,10 +126,7 @@ export const Home = () => {
     return (
         <div>
             <h1>Home</h1>
-            
-            {/* Displaying the user's clearance level directly */}
             <p>Your clearance level: {userClearanceLevel}</p>
-
             <ul>
                 {data.map(item => 
                     <DataItem key={item._id}
