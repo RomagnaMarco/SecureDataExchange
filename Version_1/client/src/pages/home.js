@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
+// Hooks to manage authentication and user state
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useGetUserID } from "../components/hooks/useGetUserID";
 
+// Utility to convert a given date string into a readable format
 const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString('en-US', {
@@ -19,61 +21,55 @@ const formatDate = (dateString) => {
     });
 }
 
+// Component representing an individual data item in the list.
+// It also allows certain users (based on clearance level) to save data items.
 const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
     return (
         <li key={item._id}>
+            {/* Notify user if the data is already saved */}
             {savedData.includes(item._id) && <h1> ALREADY SAVED </h1>}
-            <div>
-                <h2>{item.description}</h2>
-            </div>
-            <div>
-                <p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p>
-            </div>
-            <div>
-                <p>{item.tags.join(', ')}</p>
-            </div>
-            <div>
-                <p>{formatDate(item.date)}</p>
-            </div>
-            <div className="information">
-                <p>{item.info ? item.info : "No information available"}</p>
-            </div>
+            <div><h2>{item.description}</h2></div>
+            <div><p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p></div>
+            <div><p>{item.tags.join(', ')}</p></div>
+            <div><p>{formatDate(item.date)}</p></div>
+            <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
+            
+            {/* Provide save option only to users with sufficient clearance */}
             {userClearanceLevel >= 2 && <button onClick={() => saveData(item._id)}> Save Data </button>}
         </li>
     );
 }
 
+// Utility for making authenticated API calls with proper headers
 const makeApiCall = async (url, token, userClearanceLevel, userID = null) => {
     if (!token || !userClearanceLevel) return null;
 
+    const headers = {
+        Authorization: `Bearer ${token}`,
+        "Clearance-Level": userClearanceLevel,
+    };
+
     try {
-        const headers = {
-            Authorization: `Bearer ${token}`,
-            "Clearance-Level": userClearanceLevel,
-        };
-
         const response = await axios.get(userID ? `${url}/${userID}` : url, { headers });
-        if (response.status !== 200) {
-            console.error("Error fetching data.");
-            return null;
-        }
-        return response.data;
-
+        return response.status === 200 ? response.data : null;
     } catch (err) {
         console.error("Error:", err);
         return null;
     }
 }
 
+// Home component: Represents the main view users see when they access the app
 export const Home = () => {
     const [data, setData] = useState([]);
     const [savedData, setSavedData] = useState([]);
+
+    // Retrieve user-specific information and JWT token
     const userID = useGetUserID();
     const token = useGetToken();
     const decodedToken = useDecodedToken(token);
-
     const userClearanceLevel = decodedToken?.clearanceLevel;
 
+    // Handle saving of data to backend and manage success or error states
     const saveData = async (dataID) => {
         try {
             const response = await axios.put("http://localhost:3001/data", { 
@@ -91,6 +87,7 @@ export const Home = () => {
                 alert("Error saving data.");
             }
         } catch (error) {
+            // Handle error based on its type (e.g., lack of permissions)
             if (error.response && error.response.status === 403) {
                 alert("You don't have permission to save this data.");
             } else {
@@ -100,6 +97,7 @@ export const Home = () => {
         }
     }
 
+    // Use effect to fetch data and saved data IDs when dependencies change
     useEffect(() => {
         const fetchData = async () => {
             const result = await makeApiCall("http://localhost:3001/data", token, userClearanceLevel);
@@ -115,13 +113,9 @@ export const Home = () => {
         fetchSavedData();
     }, [token, userClearanceLevel, userID]);
 
-    if (!decodedToken) {
-        return <div>Access Denied. Please Log In.</div>;
-    }
-
-    if (!userClearanceLevel) {
-        return <div>You do not have the necessary clearance.</div>;
-    }
+    // Access control based on token and clearance level
+    if (!decodedToken) return <div>Access Denied. Please Log In.</div>;
+    if (!userClearanceLevel) return <div>You do not have the necessary clearance.</div>;
 
     return (
         <div>
