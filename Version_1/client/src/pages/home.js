@@ -3,6 +3,8 @@ import axios from "axios";
 
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
+import { useGetUserID } from "../components/hooks/useGetUserID";
+
 
 const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -43,6 +45,7 @@ const DataItem = ({ item, saveData, userClearanceLevel }) => {
 
 export const Home = () => {
     const [data, setData] = useState([]);
+    const userID = useGetUserID();
     const token = useGetToken();
     const decodedToken = useDecodedToken(token);
 
@@ -53,7 +56,11 @@ export const Home = () => {
 
     const saveData = async (dataID) => {
         try {
-            const response = await axios.put("http://localhost:3001/data", { dataID }, {
+            const response = await axios.put("http://localhost:3001/data", { 
+                dataID,
+                userID,
+
+             }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
