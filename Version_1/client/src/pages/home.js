@@ -89,6 +89,7 @@ export const Home = () => {
             });
 
             if (response.status === 200) {
+                setSavedData(response.data.savedData) //updates button appearance.
                 alert("Data saved successfully!");
             } else {
                 alert("Error saving data.");
