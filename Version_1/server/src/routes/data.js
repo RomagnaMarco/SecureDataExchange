@@ -125,7 +125,7 @@ router.get("/saved-data/:userID", verifyClearance(0), async (req, res) => {
         const savedData = await DataModel.find({
             _id: { $in: user.savedData },
         })
-        res.json({ savedData: user?.savedData });
+        res.json({ savedData });
     } catch (err) {
         // Error handling for fetching saved data IDs
         res.status(500).json({ message: "Internal server error", error: err });
