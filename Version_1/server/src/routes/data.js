@@ -117,5 +117,20 @@ router.get("/saved-data/ids/:userID", verifyClearance(0), async (req, res) => {
     }
 });
 
+// GET route to fetch IDs of saved data for the user
+router.get("/saved-data", verifyClearance(0), async (req, res) => { 
+    try {
+        // Retrieve user's saved data IDs based on user ID from the decoded token
+        const user = await UserModel.findById(req.params.userID);
+        const savedData = await DataModel.find({
+            _id: { $in: user.savedData },
+        })
+        res.json({ savedData: user?.savedData });
+    } catch (err) {
+        // Error handling for fetching saved data IDs
+        res.status(500).json({ message: "Internal server error", error: err });
+    }
+});
+
 // Export the router so it can be mounted in the main server/application
 export { router as dataRouter };
