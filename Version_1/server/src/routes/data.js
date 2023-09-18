@@ -132,5 +132,29 @@ router.get("/saved-data/:userID", verifyClearance(0), async (req, res) => {
     }
 });
 
+router.delete("/saved-data/:userID/:dataID", verifyClearance(0), async (req, res) => {
+    try {
+        const { userID, dataID } = req.params;
+
+        // Fetch the user
+        const user = await UserModel.findById(userID);
+
+        // If no user is found, return an error
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        // Remove the dataID from the user's savedData array
+        user.savedData = user.savedData.filter(id => id.toString() !== dataID);
+        await user.save();
+
+        // Return a success message
+        res.json({ message: "Data removed from saved list successfully." });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err });
+    }
+});
+
+
 // Export the router so it can be mounted in the main server/application
 export { router as dataRouter };
