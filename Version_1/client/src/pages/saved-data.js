@@ -25,7 +25,6 @@ const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
 
     return (
         <li key={item._id}>
-            {savedData.includes(item._id) && <h2> ALREADY SAVED </h2>}
             <div><h2>{item.description}</h2></div>
             <div><p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p></div>
             <div><p>{item.tags.join(', ')}</p></div>
