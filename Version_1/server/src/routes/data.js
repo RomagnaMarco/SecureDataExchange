@@ -118,7 +118,7 @@ router.get("/saved-data/ids/:userID", verifyClearance(0), async (req, res) => {
 });
 
 // GET route to fetch IDs of saved data for the user
-router.get("/saved-data", verifyClearance(0), async (req, res) => { 
+router.get("/saved-data/:userID", verifyClearance(0), async (req, res) => { 
     try {
         // Retrieve user's saved data IDs based on user ID from the decoded token
         const user = await UserModel.findById(req.params.userID);
