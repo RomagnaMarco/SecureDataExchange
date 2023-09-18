@@ -24,6 +24,8 @@ const formatDate = (dateString) => {
 // Component representing an individual data item in the list.
 // It also allows certain users (based on clearance level) to save data items.
 const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
+    const isDataSaved = (id) => savedData.includes(id)
+
     return (
         <li key={item._id}>
             {/* Notify user if the data is already saved */}
@@ -35,7 +37,8 @@ const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
             <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
             
             {/* Provide save option only to users with sufficient clearance */}
-            {userClearanceLevel >= 2 && <button onClick={() => saveData(item._id)}> Save Data </button>}
+            {userClearanceLevel >= 2 && <button onClick={(
+            ) => saveData(item._id)} disabled={isDataSaved(item._id)}> Save Data </button>}
         </li>
     );
 }
