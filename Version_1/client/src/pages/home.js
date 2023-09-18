@@ -38,7 +38,11 @@ const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
             
             {/* Provide save option only to users with sufficient clearance */}
             {userClearanceLevel >= 2 && <button onClick={(
-            ) => saveData(item._id)} disabled={isDataSaved(item._id)}> Save Data </button>}
+            ) => saveData(item._id)} disabled={isDataSaved(item._id)}
+            > 
+            
+            { isDataSaved(item._id) ? "Saved" : "Save Data"}
+            </button>}
         </li>
     );
 }
