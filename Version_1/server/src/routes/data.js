@@ -132,7 +132,8 @@ router.get("/saved-data/:userID", verifyClearance(0), async (req, res) => {
     }
 });
 
-router.delete("/saved-data/:userID/:dataID", verifyClearance(0), async (req, res) => {
+// DELETE route to remove IDs of saved data for the user
+router.delete("/saved-data/:userID/:dataID", verifyClearance(2), async (req, res) => {
     try {
         const { userID, dataID } = req.params;
 
@@ -154,6 +155,8 @@ router.delete("/saved-data/:userID/:dataID", verifyClearance(0), async (req, res
         res.status(500).json({ message: "Internal server error", error: err });
     }
 });
+
+//DELETE route to remove ID of data from the server
 
 
 // Export the router so it can be mounted in the main server/application
