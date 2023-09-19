@@ -6,24 +6,13 @@ import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useGetUserID } from "../components/hooks/useGetUserID";
 
-// Utility to convert a given date string into a readable format
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-        timeZone: 'America/Los_Angeles',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZoneName: 'short'
-    });
-}
+import useFormatDate from "../components/hooks/useFormatDate";
+
 
 // Component representing an individual data item in the list.
 // It also allows certain users (based on clearance level) to save data items.
 const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
+    const formattedDate = useFormatDate(item.date);
     const isDataSaved = (id) => savedData.includes(id)
 
     return (
@@ -33,7 +22,7 @@ const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
             <div><h2>{item.description}</h2></div>
             <div><p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p></div>
             <div><p>{item.tags.join(', ')}</p></div>
-            <div><p>{formatDate(item.date)}</p></div>
+            <div><p>{formattedDate}</p></div>
             <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
             
             {/* Provide save option only to users with sufficient clearance */}

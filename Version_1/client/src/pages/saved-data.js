@@ -3,22 +3,12 @@ import axios from "axios";
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useGetUserID } from "../components/hooks/useGetUserID";
+import useFormatDate from "../components/hooks/useFormatDate";
 
-const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleString('en-US', {
-        timeZone: 'America/Los_Angeles',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        timeZoneName: 'short'
-    });
-}
+
 
 const DataItem = ({ item, saveData, removeData, userClearanceLevel, savedData = [] }) => {
+    const formattedDate = useFormatDate(item.date);
     const isDataSaved = (id) => savedData.includes(id);
 
     return (
@@ -26,7 +16,7 @@ const DataItem = ({ item, saveData, removeData, userClearanceLevel, savedData = 
             <div><h2>{item.description}</h2></div>
             <div><p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p></div>
             <div><p>{item.tags.join(', ')}</p></div>
-            <div><p>{formatDate(item.date)}</p></div>
+            <div><p>{formattedDate}</p></div>
             <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
 
             {userClearanceLevel >= 2 && (
