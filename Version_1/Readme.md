@@ -1,38 +1,42 @@
 # MERN Stack Foundation (v1.0)
 
-Building a foundational web application using the MERN stack: MongoDB, Express.js, React, and Node.js.
+Lay the groundwork for a web application using the MERN stack: MongoDB, Express.js, React, and Node.js.
 
-## 🌟 Features (v1.0)
+<details>
+<summary>🌟 Features (v1.0)</summary>
 
-- **Frontend**: A basic React web interface.
-- **Backend**: Express.js server running on Node.js.
-- **Database**: MongoDB setup and connection.
+- **Frontend**: A rudimentary React web UI.
+- **Backend**: An Express.js server powered by Node.js.
+- **Database**: MongoDB establishment and integration.
 
-## 🔧 Tech Stack
+</details>
+
+<details>
+<summary>🔧 Tech Stack</summary>
 
 - **Frontend**: React
-- **Backend**: Express.js with Node.js
-  - Authentication: bcrypt, jsonwebtoken
-- **Database**: MongoDB with Mongoose ODM
+- **Backend**: Express.js running on Node.js
+  - Authentication mechanisms: bcrypt, jsonwebtoken
+- **Database**: MongoDB coupled with the Mongoose ODM
 
-## Getting Started
+</details>
 
-### Navigate to the directory
-```cd into SecureDataExchange\Version_1\client ```
+<details>
+<summary>🚀 Getting Started</summary>
 
-#### Set up a new React app
-```yarn create react-app . ```
+1. Navigate to the directory: ```SecureDataExchange\Version_1\client```
+2. Set up a new React app: ```yarn create react-app .```
+3. Navigate to another directory: ```cd into SecureDataExchange\Version_1\server```
+4. Set up a new Package Json: ```yarn init```
+5. Add necessary dependencies: 
+   - ```yarn add express cors bcrypt jsonwebtoken mongoose```
+   - For development: `yarn add --dev nodemon`
 
-### Navigate to the directory
-``` cd into SecureDataExchange\Version_1\server ```
+</details>
 
-### Set up a new Package Json
-``` yarn init ```
+<details>
+<summary>🖥 Starting the Backend Server</summary>
 
-### Add Dependencies
- ``` yarn add express cors bcrypt jsonwebtoken mongoose ```
- 
- ``` yarn add --dev nodemon ```
+To initiate the backend server, simply execute: ```yarn start```
 
-## Starting the Backend Server
-``` yarn start ```
+</details>
