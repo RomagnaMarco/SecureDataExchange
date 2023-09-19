@@ -43,13 +43,14 @@ const Login = () => {
                 password,
             });
 
-            setCookies("access_token", response.data.token, () => {
-                // Store the user's ID in local storage for later retrieval
-                window.localStorage.setItem("userID", response.data.userID);
-    
-                // Navigate the user to the homepage after successful login
-                navigate("/");
-            });
+            // Save the access token in a cookie upon successful authentication
+            setCookies("access_token", response.data.token);
+
+            // Store the user's ID in local storage for later retrieval
+            window.localStorage.setItem("userID", response.data.userID);
+
+            // Navigate the user to the homepage after successful login
+            navigate("/");
         } catch(err) {
             alert("An error occurred during Login.");
             console.error(err);

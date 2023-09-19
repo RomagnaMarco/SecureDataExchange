@@ -39,8 +39,12 @@ function verifyClearance(requiredClearance) {
             // Proceed to the next middleware or route handler
             next();
         } catch (err) {
-            // Error handling: could be token verification failure or database issues
-            return res.status(401).json({ message: "Authentication error.", error: err });
+            // Error handling: could be token verification failure or database issues. Checks first for Expiration
+            if (err instanceof jwt.TokenExpiredError) {
+                return res.status(401).json({ message: "Session has Expired." }); //token expired
+            } else {
+                return res.status(401).json({ message: "Authentication error.", error: err });
+            }
         }
     };
 }
