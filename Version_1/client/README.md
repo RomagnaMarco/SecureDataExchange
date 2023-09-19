@@ -3,7 +3,7 @@
 This README provides insights and setup information for the frontend of the SecureDataExchange full-stack application.
 
 <details>
-<summary>## 🔍 Available Scripts</summary>
+<summary> 🔍 Available Scripts</summary>
 
 ### `yarn start`
 - **What it does**: Launches the app in development mode.
@@ -30,7 +30,7 @@ This README provides insights and setup information for the frontend of the Secu
 </details>
 
 <details>
-<summary>## 📦 Additional Dependencies</summary>
+<summary>📦 Additional Dependencies</summary>
 
 For a holistic frontend functionality in the SecureDataExchange application, we've integrated some pivotal dependencies:
 
@@ -53,32 +53,31 @@ yarn add react-router-dom axios react-cookie jwt-decode
 ```
 </details>
 
-</details>
-
 <details>
-<summary>##🔐 Security Clearance and User Permissions</summary>
+<summary>🔐 Security Clearance and User Permissions</summary>
 
-In the SecureDataExchange application, user permissions and visibility are governed by their designated security clearance levels. Here's a breakdown of the functionalities and access granted to each security clearance level:
+In the SecureDataExchange application, user permissions and visibility are governed by their designated security clearance levels. Below is a breakdown of the functionalities and access granted to each security clearance level:
 
-### `Level 0`
+### Level 0
 - **Permissions**:
   - **GET**: Users can retrieve information.
 - **Restrictions**: Certain sensitive information might be concealed or redacted.
 
-### `Level 1`
+### Level 1
 - **Permissions**:
   - **GET**: Users can retrieve information.
   - **POST**: Users can add or submit new information.
 - **Restrictions**: While users can both retrieve and post, certain data points or functionalities might be restricted based on their clearance.
 
-### `Level 2`
+### Level 2
 - **Permissions**:
   - **GET**: Users can retrieve information.
   - **POST**: Users can add or submit new information.
-  - **PUT**: Users can modify or update existing information. This includes saving data.
+  - **PUT**: Users can modify or update existing information. This includes saving data to their personal lists.
+  - **DELETE**: Users can remove data from their saved lists. However, they cannot delete the core data.
 - **Restrictions**: Even though they have more access, some functionalities or data might still be restricted.
 
-### `Level 3` (Admins)
+### Level 3 (Admins)
 - **Permissions**:
   - **Full Access**: Admins can GET, POST, PUT, and DELETE data. They have the most extensive set of privileges and can manage users, data, and application settings.
 - **Note**: Admins should be cautious and operate with due diligence given their elevated access rights.
@@ -86,3 +85,6 @@ In the SecureDataExchange application, user permissions and visibility are gover
 Always ensure that you're aware of your security clearance and only perform actions within your designated permissions. Misuse or unauthorized access attempts will be logged and may have consequences.
 
 </details>
+
+
+
