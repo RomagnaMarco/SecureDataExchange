@@ -1,3 +1,4 @@
+// Import necessary hooks and libraries from React and axios
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -8,50 +9,65 @@ import { useGetUserID } from "../components/hooks/useGetUserID";
 import useFormatDate from "../components/hooks/useFormatDate";
 
 /**
- * DataItem component represents each individual data in the list.
- * It provides functionalities such as displaying data and saving the data
- * based on the user's clearance level.
+ * DataItem component displays individual data entries.
+ * @param {Object} item - The individual data entry.
+ * @param {Function} saveData - Function to save data.
+ * @param {Function} deleteData - Function to delete data.
+ * @param {Number} userClearanceLevel - User's security clearance level.
+ * @param {Array} savedData - Array containing IDs of saved data.
+ * @returns {JSX.Element}
  */
-const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
-    // Utilize the custom hook to obtain a formatted date for the given item
+const DataItem = ({ item, saveData, deleteData, userClearanceLevel, savedData = [] }) => {
+    // Format date using the custom hook
     const formattedDate = useFormatDate(item.date);
-
-    // Function to determine if a data item has already been saved
-    const isDataSaved = (id) => savedData.includes(id)
+    
+    // Helper function to check if data is already saved
+    const isDataSaved = (id) => savedData.includes(id);
 
     return (
-        // Render each data item's details, including description, clearance level, tags, and date
+        // Display the details of the data item
         <li key={item._id}>
             <div><h2>{item.description}</h2></div>
             <div><p>Item's clearance level: {item.clearanceLevel !== undefined ? item.clearanceLevel : "Not available"}</p></div>
             <div><p>{item.tags.join(', ')}</p></div>
             <div><p>{formattedDate}</p></div>
             <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
-            {userClearanceLevel >= 2 && <button onClick={(
-            ) => saveData(item._id)} disabled={isDataSaved(item._id)}
-            > 
-            { isDataSaved(item._id) ? "Already Saved" : "Save Data"}
-            </button>}
+            
+            {/* Buttons to save and delete data, based on user clearance level */}
+            {userClearanceLevel >= 2 && <button onClick={() => saveData(item._id)} disabled={isDataSaved(item._id)}>{isDataSaved(item._id) ? "Already Saved" : "Save Data"}</button>}
+            {userClearanceLevel === 3 && <button onClick={() => deleteData(item._id)}>Delete</button>}
         </li>
     );
 }
 
 /**
  * Utility function to make authenticated API calls.
- * The function ensures that proper headers (Authorization and Clearance-Level)
- * are set for the API requests.
+ * @param {String} url - Endpoint URL.
+ * @param {String} token - JWT token.
+ * @param {Number} userClearanceLevel - User's security clearance level.
+ * @param {String} [method="GET"] - HTTP method.
+ * @param {Object} [data=null] - Request payload.
+ * @returns {Promise}
  */
-const makeApiCall = async (url, token, userClearanceLevel, userID = null) => {
+const makeApiCall = async (url, token, userClearanceLevel, method = "GET", data = null) => {
     if (!token || !userClearanceLevel) return null;
 
+    // Set up headers for the request
     const headers = {
         Authorization: `Bearer ${token}`,
         "Clearance-Level": userClearanceLevel,
     };
 
+    // Execute the API call and return the result
     try {
-        const response = await axios.get(userID ? `${url}/${userID}` : url, { headers });
-        return response.status === 200 ? response.data : null;
+        const response = await axios({
+            method: method,
+            url: url,
+            headers: headers,
+            data: data
+        });
+        
+        return response.data;
     } catch (err) {
         console.error("Error:", err);
         return null;
@@ -59,21 +75,26 @@ const makeApiCall = async (url, token, userClearanceLevel, userID = null) => {
 }
 
 /**
- * Home component serves as the main dashboard view users see upon accessing the app.
- * The component is responsible for fetching, displaying, and managing saved data items.
+ * Home component fetches, displays, and manages data.
+ * @returns {JSX.Element}
  */
 export const Home = () => {
-    // State variables to manage the fetched data and IDs of saved data items
+    // State to store the fetched data and saved data
     const [data, setData] = useState([]);
     const [savedData, setSavedData] = useState([]);
 
-    // Use custom hooks to obtain user-specific details and JWT token
+    // Fetch user ID and JWT token using custom hooks
     const userID = useGetUserID();
     const token = useGetToken();
+
+    // Decode the JWT token to extract user details
     const decodedToken = useDecodedToken(token);
     const userClearanceLevel = decodedToken?.clearanceLevel;
 
-    // Function to handle data saving operations
+    /**
+     * Save a specific data entry.
+     * @param {String} dataID - ID of the data to save.
+     */
     const saveData = async (dataID) => {
         try {
             const response = await axios.put("http://localhost:3001/data", { 
@@ -85,13 +106,15 @@ export const Home = () => {
                 }
             });
 
+            // Handle response from the save data endpoint
             if (response.status === 200) {
-                setSavedData(response.data.savedData)
+                setSavedData(response.data.savedData);
                 alert("Data saved successfully!");
             } else {
                 alert("Error saving data.");
             }
         } catch (error) {
+            // Handle potential errors
             if (error.response && error.response.status === 403) {
                 alert("You don't have permission to save this data.");
             } else {
@@ -101,40 +124,48 @@ export const Home = () => {
         }
     }
 
-    // UseEffect to fetch data and saved data IDs whenever dependencies change
+    /**
+     * Delete a specific data entry.
+     * @param {String} dataID - ID of the data to delete.
+     */
+    const deleteData = async (dataID) => {
+        const response = await makeApiCall("http://localhost:3001/data", token, userClearanceLevel, "DELETE", { dataID });
+
+        // Remove deleted data from the state
+        if (response && response.success) {
+            setData(prevData => prevData.filter(item => item._id !== dataID));
+        }
+    }
+
+    // Effect to fetch data on component mount
     useEffect(() => {
         const fetchData = async () => {
-            const result = await makeApiCall("http://localhost:3001/data", token, userClearanceLevel);
-            if (result) setData(result);
-        };
-
-        const fetchSavedData = async () => {
-            const result = await makeApiCall("http://localhost:3001/data/saved-data/ids", token, userClearanceLevel, userID);
-            if (result && result.savedData) setSavedData(result.savedData);
-        };
+            const fetchedData = await makeApiCall("http://localhost:3001/data", token, userClearanceLevel);
+            if (fetchedData) setData(fetchedData);
+        }
 
         fetchData();
-        fetchSavedData();
-    }, [token, userClearanceLevel, userID]);
+    }, [token, userClearanceLevel]);
 
-    // Conditional rendering based on the user's authentication status and clearance level
+    // Render based on user's JWT token and clearance level
     if (!decodedToken) return <div>Access Denied. Please Log In.</div>;
     if (!userClearanceLevel) return <div>You do not have the necessary clearance.</div>;
 
     return (
-        // Render the main view including user's clearance level and list of data items
         <div>
             <h1>Home</h1>
             <p>Your clearance level: {userClearanceLevel}</p>
             <ul>
-                {data.map(item => 
-                    <DataItem key={item._id}
+                {data.map(item => (
+                    <DataItem
+                        key={item._id}
                         item={item}
                         saveData={saveData}
+                        deleteData={deleteData}
                         userClearanceLevel={userClearanceLevel}
                         savedData={savedData}
                     />
-                )}
+                ))}
             </ul>
         </div>
     );
