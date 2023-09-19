@@ -53,10 +53,17 @@ router.post("/login", async (req, res) => {
       return res.json({ message: "Username or Password is Incorrect! " })
 
   // Make a web token
-  const token = jwt.sign({
+  const token = jwt.sign(
+    {
       id: user._id,
       clearanceLevel: user.clearanceLevel
-  }, process.env.JWT_SECRET);
+    }, 
+    process.env.JWT_SECRET, 
+    {
+      expiresIn: "1h" //tokens last 1 hour.
+    }
+  );
+  
 
   res.json({ token, userID: user._id });
 });
