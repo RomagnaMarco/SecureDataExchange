@@ -56,7 +56,7 @@ yarn add react-router-dom axios react-cookie jwt-decode
 </details>
 
 <details>
-<summary>🔐 Security Clearance and User Permissions</summary>
+<summary>##🔐 Security Clearance and User Permissions</summary>
 
 In the SecureDataExchange application, user permissions and visibility are governed by their designated security clearance levels. Here's a breakdown of the functionalities and access granted to each security clearance level:
 
