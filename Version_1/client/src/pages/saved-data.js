@@ -1,20 +1,28 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-// Importing custom hooks for various functionalities
+
+// Custom hooks for managing user-specific details, JWT token, and formatting
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useGetUserID } from "../components/hooks/useGetUserID";
 import useFormatDate from "../components/hooks/useFormatDate";
 
 /**
- * Individual data item component that displays data and provides
- * options based on user's clearance level.
+ * DataItem Component:
+ * Renders individual data items along with relevant options based on user's clearance level.
+ * 
+ * Props:
+ * - item: The data item to display
+ * - saveData: Callback function to handle saving data
+ * - removeData: Callback function to handle removing saved data
+ * - userClearanceLevel: User's current clearance level
+ * - savedData: List of IDs of saved data items
  */
 const DataItem = ({ item, saveData, removeData, userClearanceLevel, savedData = [] }) => {
-    // Use custom hook to format the date
+    // Formatting the date of the data item
     const formattedDate = useFormatDate(item.date);
 
-    // Helper function to check if data is saved
+    // Helper function to determine if the current data item is saved
     const isDataSaved = (id) => savedData.includes(id);
 
     return (
@@ -24,7 +32,6 @@ const DataItem = ({ item, saveData, removeData, userClearanceLevel, savedData = 
             <div><p>{item.tags.join(', ')}</p></div>
             <div><p>{formattedDate}</p></div>
             <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
-
             {userClearanceLevel >= 2 && (
                 <>
                     {isDataSaved(item._id) && (
@@ -39,10 +46,15 @@ const DataItem = ({ item, saveData, removeData, userClearanceLevel, savedData = 
 }
 
 /**
- * Generic function to make authenticated API calls with clearance level.
+ * Helper function to make authenticated API calls with appropriate headers.
+ * 
+ * @param {string} url - Endpoint URL
+ * @param {string} token - JWT token for user
+ * @param {number} userClearanceLevel - User's clearance level
+ * @param {string} method - HTTP method (default is 'GET')
+ * @param {object} data - Optional payload for the request
  */
 const makeApiCall = async (url, token, userClearanceLevel, method = "GET", data = null) => {
-    // Ensure token and userClearanceLevel are available before making API call
     if (!token || !userClearanceLevel) return null;
 
     const headers = {
@@ -66,14 +78,15 @@ const makeApiCall = async (url, token, userClearanceLevel, method = "GET", data 
 }
 
 /**
- * Main component to fetch and display saved data for the authenticated user.
+ * SavedData Component:
+ * Main component to display and manage user's saved data.
  */
 export const SavedData = () => {
-    // States to manage fetched data and saved data IDs
+    // State management for fetched data and list of saved data IDs
     const [data, setData] = useState([]);
     const [savedDataIDs, setSavedDataIDs] = useState([]);
 
-    // Fetch necessary values using custom hooks
+    // Retrieving user-specific details and JWT token using custom hooks
     const userID = useGetUserID();
     const token = useGetToken();
     const decodedToken = useDecodedToken(token);
@@ -97,7 +110,7 @@ export const SavedData = () => {
         }
     }
 
-    // Function to remove saved data
+    // Function to remove specific saved data
     const removeData = async (dataID) => {
         const result = await makeApiCall(
             `http://localhost:3001/data/saved-data/${userID}/${dataID}`, 
@@ -115,7 +128,7 @@ export const SavedData = () => {
         }
     }
 
-    // Fetch saved data on component mount or upon changes in dependencies
+    // Fetch the user's saved data on initial render or when dependencies change
     useEffect(() => {
         const fetchData = async () => {
             const result = await makeApiCall(`http://localhost:3001/data/saved-data/${userID}`, token, userClearanceLevel);
@@ -128,7 +141,7 @@ export const SavedData = () => {
         fetchData();
     }, [token, userClearanceLevel, userID]);
 
-    // Display messages based on the user's authentication status and clearance level
+    // Render appropriate messages based on user's authentication status and clearance level
     if (!decodedToken) return <div>Access Denied. Please Log In.</div>;
     if (!userClearanceLevel) return <div>You do not have the necessary clearance.</div>;
 
