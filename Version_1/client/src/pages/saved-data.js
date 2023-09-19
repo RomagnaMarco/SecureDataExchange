@@ -1,7 +1,5 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
-
-// Hooks to manage authentication and user state
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
 import { useGetUserID } from "../components/hooks/useGetUserID";
@@ -20,7 +18,7 @@ const formatDate = (dateString) => {
     });
 }
 
-const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
+const DataItem = ({ item, saveData, removeData, userClearanceLevel, savedData = [] }) => {
     const isDataSaved = (id) => savedData.includes(id);
 
     return (
@@ -31,14 +29,20 @@ const DataItem = ({ item, saveData, userClearanceLevel, savedData = [] }) => {
             <div><p>{formatDate(item.date)}</p></div>
             <div className="information"><p>{item.info ? item.info : "No information available"}</p></div>
 
-            {userClearanceLevel >= 2 && <button onClick={() => saveData(item._id)} disabled={isDataSaved(item._id)}>
-                {isDataSaved(item._id) ? "Saved" : "Save Data"}
-            </button>}
+            {userClearanceLevel >= 2 && (
+                <>
+                    {isDataSaved(item._id) && (
+                        <button onClick={() => removeData(item._id)}>
+                            Remove Data
+                        </button>
+                    )}
+                </>
+            )}
         </li>
     );
 }
 
-const makeApiCall = async (url, token, userClearanceLevel, userID = null) => {
+const makeApiCall = async (url, token, userClearanceLevel, method = "GET", data = null) => {
     if (!token || !userClearanceLevel) return null;
 
     const headers = {
@@ -47,7 +51,13 @@ const makeApiCall = async (url, token, userClearanceLevel, userID = null) => {
     };
 
     try {
-        const response = await axios.get(userID ? `${url}/${userID}` : url, { headers });
+        const response = await axios({
+            method: method,
+            url: url,
+            headers: headers,
+            data: data
+        });
+        
         return response.status === 200 ? response.data : null;
     } catch (err) {
         console.error("Error:", err);
@@ -65,29 +75,36 @@ export const SavedData = () => {
     const userClearanceLevel = decodedToken?.clearanceLevel;
 
     const saveData = async (dataID) => {
-        try {
-            const response = await axios.put("http://localhost:3001/data", {
-                dataID,
-                userID,
-            }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            });
+        const result = await makeApiCall(
+            "http://localhost:3001/data", 
+            token, 
+            userClearanceLevel, 
+            "PUT",
+            { dataID, userID }
+        );
 
-            if (response.status === 200) {
-                setSavedDataIDs(response.data.savedData);
-                alert("Data saved successfully!");
-            } else {
-                alert("Error saving data.");
-            }
-        } catch (error) {
-            if (error.response && error.response.status === 403) {
-                alert("You don't have permission to save this data.");
-            } else {
-                alert("An error occurred while saving data.");
-            }
-            console.error("Error:", error);
+        if (result && result.savedData) {
+            setSavedDataIDs(result.savedData);
+            alert("Data saved successfully!");
+        } else {
+            alert("An error occurred while saving data.");
+        }
+    }
+
+    const removeData = async (dataID) => {
+        const result = await makeApiCall(
+            `http://localhost:3001/data/saved-data/${userID}/${dataID}`, 
+            token, 
+            userClearanceLevel, 
+            "DELETE"
+        );
+
+        if (result) {
+            setSavedDataIDs(prevIDs => prevIDs.filter(id => id !== dataID));
+            setData(prevData => prevData.filter(item => item._id !== dataID));
+            alert("Data removed successfully!");
+        } else {
+            alert("An error occurred while removing data.");
         }
     }
 
@@ -115,6 +132,7 @@ export const SavedData = () => {
                     <DataItem key={item._id}
                         item={item}
                         saveData={saveData}
+                        removeData={removeData}
                         userClearanceLevel={userClearanceLevel}
                         savedData={savedDataIDs}
                     />
