@@ -53,6 +53,8 @@ yarn add react-router-dom axios react-cookie jwt-decode
 ```
 </details>
 
+</details>
+
 <details>
 <summary>##🔐 Security Clearance and User Permissions</summary>
 
