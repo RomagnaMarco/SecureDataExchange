@@ -35,7 +35,16 @@ const DataItem = ({ item, saveData, deleteData, userClearanceLevel, savedData = 
             
             {/* Buttons to save and delete data, based on user clearance level */}
             {userClearanceLevel >= 2 && <button onClick={() => saveData(item._id)} disabled={isDataSaved(item._id)}>{isDataSaved(item._id) ? "Already Saved" : "Save Data"}</button>}
-            {userClearanceLevel === 3 && <button onClick={() => deleteData(item._id)}>Delete</button>}
+            {userClearanceLevel === 3 && (
+                <button onClick={() => {
+                if (window.confirm("Are you sure you want to delete this data?")) {
+                    deleteData(item._id);
+                }
+    }}>
+        Delete
+    </button>
+)}
+
         </li>
     );
 }
