@@ -156,7 +156,20 @@ router.delete("/saved-data/:userID/:dataID", verifyClearance(2), async (req, res
     }
 });
 
-//DELETE route to remove ID of data from the server
+// DELETE route to delete main data, with Level 3 clearance check
+router.delete("/:dataID", verifyClearance(3), async (req, res) => {
+    try {
+        const { dataID } = req.params;
+        
+        // Delete the data with the provided ID
+        await DataModel.findByIdAndDelete(dataID);
+        
+        // Return a success message
+        res.json({ message: "Data deleted successfully." });
+    } catch (err) {
+        res.status(500).json({ message: "Internal server error", error: err });
+    }
+});
 
 
 // Export the router so it can be mounted in the main server/application
