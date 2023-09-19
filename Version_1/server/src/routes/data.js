@@ -165,7 +165,7 @@ router.delete("/:dataID", verifyClearance(3), async (req, res) => {
         await DataModel.findByIdAndDelete(dataID);
         
         // Return a success message
-        res.json({ message: "Data deleted successfully." });
+        res.json({ success: true, message: "Data deleted successfully." });
     } catch (err) {
         res.status(500).json({ message: "Internal server error", error: err });
     }
