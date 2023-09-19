@@ -3,22 +3,31 @@ import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from "jwt-decode";
+import { useEffect, useState } from 'react';
 
 export const Navbar = () => {
     // Manage the access_token using the useCookies hook
     const [cookies, setCookies] = useCookies(["access_token"]);
-
+    
     // Use the useNavigate hook from react-router for programmatic navigation
     const navigate = useNavigate();
+    
+    // Using state to manage the clearance level
+    const [clearanceLevel, setClearanceLevel] = useState(0);
 
-    // Set the default clearance level for a user
-    let clearanceLevel = 0;
+    useEffect(() => {
+        console.log("Navbar is being mounted.");
 
-    // Check for the presence of an access_token and decode it to obtain the user's clearance level
-    if (cookies.access_token) {
-        const decodedToken = jwtDecode(cookies.access_token);
-        clearanceLevel = decodedToken.clearanceLevel || 0; // Extract clearance level or default to 0
-    }
+        // Check for the presence of an access_token and decode it to obtain the user's clearance level
+        if (cookies.access_token) {
+            const decodedToken = jwtDecode(cookies.access_token);
+            setClearanceLevel(decodedToken.clearanceLevel || 0); // Extract clearance level or default to 0
+        }
+
+        return () => {
+            console.log("Navbar is being unmounted.")
+        }
+    }, [cookies.access_token]); // Adding dependency to re-run the useEffect when the token changes
 
     /**
      * Handles the logout process by:
@@ -29,6 +38,7 @@ export const Navbar = () => {
     const logout = () => {
         setCookies("access_token", "", { expires: new Date(0) }); // Expire the access_token cookie immediately
         window.localStorage.removeItem("userID"); // Remove userID from local storage
+        console.log("About to navigate to /auth");
         navigate("/auth"); // Redirect to the authentication page
     }
 
