@@ -138,8 +138,8 @@ export const Home = () => {
      * @param {String} dataID - ID of the data to delete.
      */
     const deleteData = async (dataID) => {
-        const response = await makeApiCall("http://localhost:3001/data", token, userClearanceLevel, "DELETE", { dataID });
-
+        const response = await makeApiCall(`http://localhost:3001/data/${dataID}`, token, userClearanceLevel, "DELETE");
+    
         // Remove deleted data from the state
         if (response && response.success) {
             setData(prevData => prevData.filter(item => item._id !== dataID));
