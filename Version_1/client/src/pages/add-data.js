@@ -23,13 +23,14 @@ export const AddData = () => {
   const decodedToken = useDecodedToken(token);
   
   // State to manage the form data for new data entry
-  const [data, setData] = useState({
-    clearance: 0,
-    description: "",
-    tags: [],
-    info: "",
-    userOwner: userID,
-  });
+const [data, setData] = useState({
+  clearanceLevel: (decodedToken && decodedToken.clearanceLevel) || 0,
+  description: "",
+  tags: [],
+  info: "",
+  userOwner: userID,
+});
+
 
   // Hook to programmatically navigate between routes
   const navigate = useNavigate();
@@ -68,7 +69,7 @@ export const AddData = () => {
   const handleSubmitData = async (event) => {
     event.preventDefault();
   
-    const selectedClearanceLevel = data.clearance;
+    const selectedClearanceLevel = data.clearanceLevel;
 
     // Validation: Description is mandatory
     if (!data.description) {
@@ -83,7 +84,7 @@ export const AddData = () => {
     }
 
     const dataToSend = {
-      clearance: selectedClearanceLevel,
+      clearanceLevel: selectedClearanceLevel,
       description: data.description,
       tags: data.tags,
       info: data.info,
@@ -116,12 +117,12 @@ export const AddData = () => {
     <div className="add-data">
       <h2>Add Data</h2>
       <form onSubmit={handleSubmitData}>
-        <label htmlFor="clearance">Clearance Level</label>
+        <label htmlFor="clearanceLevel">Clearance Level</label>
         <select
-          id="clearance"
-          name="clearance"
+          id="clearanceLevel"
+          name="clearanceLevel"
           onChange={handleChange}
-          value={data.clearance}
+          value={data.clearanceLevel}
         >
           {clearanceLevels.map((level) => (
             <option key={level} value={level}>
