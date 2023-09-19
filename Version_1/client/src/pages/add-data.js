@@ -4,21 +4,25 @@ import axios from "axios";
 import { useGetUserID } from "../components/hooks/useGetUserID";
 import { useGetToken } from "../components/hooks/useGetToken";
 import useDecodedToken from "../components/hooks/useDecodedToken";
-import { useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom';
 
-// The add-data component definition
+/**
+ * AddData Component.
+ * Allows users to submit new data entries, checking their clearance level and
+ * providing inputs for various data attributes like description, tags, and additional info.
+ */
 export const AddData = () => {
   
-  // use hook to get UserID
+  // Retrieve the current user's ID
   const userID = useGetUserID();
-  // use hook for token
+  
+  // Retrieve the current session's JWT token
   const token = useGetToken();
   
-  // Decode the token pulled from our hook to access the user's clearance level
+  // Decode the JWT token to access user-related attributes like clearance level
   const decodedToken = useDecodedToken(token);
   
-
-  // Initialize the 'data' state to hold form inputs and tags
+  // State to manage the form data for new data entry
   const [data, setData] = useState({
     clearance: 0,
     description: "",
@@ -27,18 +31,23 @@ export const AddData = () => {
     userOwner: userID,
   });
 
-  const navigate = useNavigate()
+  // Hook to programmatically navigate between routes
+  const navigate = useNavigate();
 
-  // Array of clearance levels (0-3)
+  // Clearance levels available for selection
   const clearanceLevels = [0, 1, 2, 3];
 
-  // Handle changes for form fields (clearance, description, info, etc.)
+  /**
+   * Handles the change of input fields in the form.
+   */
   const handleChange = (event) => {
     const { name, value } = event.target;
     setData({ ...data, [name]: value });
   };
 
-  // Handle changes for individual tags
+  /**
+   * Handles the change of tags input fields in the form.
+   */
   const handleTagChange = (event, idx) => {
     const { value } = event.target;
     const updatedTags = [...data.tags];
@@ -46,72 +55,68 @@ export const AddData = () => {
     setData({ ...data, tags: updatedTags });
   };
 
-  // Add a new empty tag field
+  /**
+   * Adds an empty input field for a new tag.
+   */
   const addTag = () => {
     setData({ ...data, tags: [...data.tags, ""] });
   };
 
-  // Handle data submission
+  /**
+   * Handles the submission of the form data to the server.
+   */
   const handleSubmitData = async (event) => {
     event.preventDefault();
   
+    const selectedClearanceLevel = data.clearance;
+
+    // Validation: Description is mandatory
+    if (!data.description) {
+      alert("Description is required.");
+      return;
+    }
+
+    // Validation: Ensure user's clearance level matches or exceeds the clearance level of the data being submitted
+    if (decodedToken.clearanceLevel < selectedClearanceLevel) {
+      alert("Insufficient clearance level to submit this data.");
+      return;
+    }
+
+    const dataToSend = {
+      clearance: selectedClearanceLevel,
+      description: data.description,
+      tags: data.tags,
+      info: data.info,
+      userOwner: data.userOwner,
+    };
+
+    // Send the data to the server
     try {
-      const selectedClearanceLevel = data.clearance;
-  
-      // Check if 'description' is empty or null
-      if (!data.description) {
-        alert("Description is required.");
-        return;
-      }
-  
-      // Check if the user's clearance level is sufficient
-      if (decodedToken.clearanceLevel < selectedClearanceLevel) {
-        alert("Insufficient clearance level to submit this data.");
-        return;
-      }
-  
-      // Ensure data being sent is in the correct format.
-      const dataToSend = {
-        clearance: selectedClearanceLevel,
-        description: data.description,
-        tags: data.tags,
-        info: data.info,
-        userOwner: data.userOwner,
-      };
-  
-      // Continue with the data submission
       const response = await axios.post("http://localhost:3001/data", dataToSend, {
         headers: {
-          Authorization: `Bearer ${token}`, // Include the token in the 'Authorization' header
-          "Content-Type": "application/json", // Set the content type to JSON
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
         },
       });
-  
-      // Log the response data
-      console.log("Server Response:", response.data);
-  
-      // Check for any errors in the server response
+
       if (response.data.error) {
-        // Handle server-side errors
-        console.error("Server Error:", response.data.error);
         alert("Error while submitting data. Server returned an error.");
       } else {
         alert("Data Added");
-        navigate("/") //go back to home page
+        navigate("/") // Navigate back to the home page
       }
     } catch (err) {
-      console.error("Client Error:", err);
-  
-      // Handle client-side errors
       alert("Error while submitting data. An error occurred on the client.");
+      console.error("Client Error:", err);
     }
   };
 
+  // Render the component
   return (
     <div className="add-data">
-      <h2> Add Data </h2>
+      <h2>Add Data</h2>
       <form onSubmit={handleSubmitData}>
-        <label htmlFor="clearance"> Clearance Level </label>
+        <label htmlFor="clearance">Clearance Level</label>
         <select
           id="clearance"
           name="clearance"
@@ -125,7 +130,7 @@ export const AddData = () => {
           ))}
         </select>
 
-        <label htmlFor="description"> Description </label>
+        <label htmlFor="description">Description</label>
         <textarea
           id="description"
           name="description"
@@ -133,7 +138,7 @@ export const AddData = () => {
           value={data.description}
         ></textarea>
 
-        <label htmlFor="tags"> Tags </label>
+        <label htmlFor="tags">Tags</label>
         {data.tags.map((tag, idx) => (
           <div key={idx}>
             <input
@@ -144,11 +149,9 @@ export const AddData = () => {
             />
           </div>
         ))}
-        <button type="button" onClick={addTag}>
-          Add Tag
-        </button>
+        <button type="button" onClick={addTag}>Add Tag</button>
 
-        <label htmlFor="info"> Information </label>
+        <label htmlFor="info">Information</label>
         <textarea
           id="info"
           name="info"
@@ -156,7 +159,7 @@ export const AddData = () => {
           value={data.info}
         ></textarea>
 
-        <button type="submit"> Add Data </button>
+        <button type="submit">Add Data</button>
       </form>
     </div>
   );
