@@ -1,33 +1,36 @@
+
 // Importing necessary libraries and hooks for routing, cookie management, and JWT decoding
 import { Link } from 'react-router-dom';
 import { useCookies } from "react-cookie";
 import { useNavigate } from 'react-router-dom';
 import jwtDecode from "jwt-decode";
-import { useEffect, useState } from 'react';
 
 export const Navbar = () => {
     // Manage the access_token using the useCookies hook
     const [cookies, setCookies] = useCookies(["access_token"]);
-    
+
     // Use the useNavigate hook from react-router for programmatic navigation
     const navigate = useNavigate();
-    
-    // Using state to manage the clearance level
-    const [clearanceLevel, setClearanceLevel] = useState(0);
 
-    useEffect(() => {
-        console.log("Navbar is being mounted.");
+    // Set the default clearance level for a user
+    let clearanceLevel = 0;
 
-        // Check for the presence of an access_token and decode it to obtain the user's clearance level
+    // Attempt to decode the JWT token and extract the clearance level
+    try {
+        // Check for the presence of an access_token
         if (cookies.access_token) {
+            // Decode the JWT token to obtain user details
             const decodedToken = jwtDecode(cookies.access_token);
-            setClearanceLevel(decodedToken.clearanceLevel || 0); // Extract clearance level or default to 0
+            // Extract clearance level from the decoded token or default to 0
+            clearanceLevel = decodedToken.clearanceLevel || 0;
         }
-
-        return () => {
-            console.log("Navbar is being unmounted.")
-        }
-    }, [cookies.access_token]); // Adding dependency to re-run the useEffect when the token changes
+    } catch (error) {
+        // In case of an error in decoding (e.g., token is invalid), handle gracefully
+        console.error("Error decoding the token:", error);
+        // You might want to invalidate the token here and force a re-login
+        setCookies("access_token", "", { expires: new Date(0) });
+        navigate("/auth");
+    }
 
     /**
      * Handles the logout process by:
@@ -36,10 +39,12 @@ export const Navbar = () => {
      * 3. Redirecting the user to the authentication page
      */
     const logout = () => {
-        setCookies("access_token", "", { expires: new Date(0) }); // Expire the access_token cookie immediately
-        window.localStorage.removeItem("userID"); // Remove userID from local storage
-        console.log("About to navigate to /auth");
-        navigate("/auth"); // Redirect to the authentication page
+        // Expire the access_token cookie immediately
+        setCookies("access_token", "", { expires: new Date(0) });
+        // Remove userID from local storage
+        window.localStorage.removeItem("userID");
+        // Redirect to the authentication page
+        navigate("/auth");
     }
 
     return (
@@ -47,16 +52,16 @@ export const Navbar = () => {
             {/* Standard link to the home page */}
             <Link to="/"> Home </Link>{" "}
             
-            {/* Display certain navigation links based on the user's authentication status and clearance level */}
+            {/* Conditionally display navigation links based on user's authentication and clearance level */}
             {cookies.access_token && (
                 <>
-                    {/* Show the "Add Data" link only to users with a clearance level of 1 or higher */}
+                    {/* Show "Add Data" link only to users with clearance level 1 or higher */}
                     {clearanceLevel >= 1 && <Link to="/add-data"> Add Data </Link>}{" "}
                     <Link to="/saved-data"> Saved Data </Link>{" "}
                 </>
             )}
 
-            {/* Conditionally display either a "Login/Register" link or a "Logout" button based on the user's authentication status */}
+            {/* Conditionally display either "Login/Register" link or "Logout" button based on authentication status */}
             {!cookies.access_token ? (
                 <Link to="/auth"> Login/Register </Link>
             ) : (
