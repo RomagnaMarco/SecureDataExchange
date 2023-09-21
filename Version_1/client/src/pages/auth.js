@@ -64,16 +64,18 @@ const Login = ({ toggleForm }) => {
         }
     }
 
-    // Render the Form component tailored for login
     return (
-        <Form 
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-            label="Login"
-            onSubmit={onSubmit}
-        />
+        <div>
+            <Form 
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+                label="Login"
+                onSubmit={onSubmit}
+            />
+            <button onClick={toggleForm}>Don't Have an Account? Click Here to Register</button>
+        </div>
     );
 }
 
@@ -103,16 +105,18 @@ const Register = ({ toggleForm }) => {
         }
     }
 
-    // Render the Form component tailored for registration
     return (
-        <Form 
-            username={username}
-            setUsername={setUsername}
-            password={password}
-            setPassword={setPassword}
-            label="Register"
-            onSubmit={onSubmit}
-        />
+        <div>
+            <Form 
+                username={username}
+                setUsername={setUsername}
+                password={password}
+                setPassword={setPassword}
+                label="Register"
+                onSubmit={onSubmit}
+            />
+            <button onClick={toggleForm}>Already Have an account? Click Here to Login</button>
+        </div>
     );
 }
 
