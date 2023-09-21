@@ -44,33 +44,34 @@ const Login = ({ toggleForm }) => {
    */
   const handleLogin = async (event) => {
     event.preventDefault();
-
+  
     // Check if both username and password are entered
     if (!username || !password) {
-      setError("Please enter both a username and password.");
+      alert("Please enter both a username and a password.");
       return;
     }
-
+  
     try {
       // Authenticate the user with the backend (replace with your API endpoint)
       const response = await axios.post("http://localhost:3001/auth/login", {
         username,
         password,
       });
-
+  
       // Save the access token in a cookie upon successful authentication
       setCookies("access_token", response.data.token);
-
+  
       // Store the user's ID in local storage for later retrieval
       window.localStorage.setItem("userID", response.data.userID);
-
+  
       // Navigate the user to the homepage after successful login
       navigate("/");
     } catch (err) {
-      setError("An error occurred during Login.");
+      alert("An error occurred during Login.");
       console.error(err);
     }
   };
+  
 
   // Render the Form component tailored for login
   return (
