@@ -58,19 +58,26 @@ const Login = ({ toggleForm }) => {
         password,
       });
   
-      // Save the access token in a cookie upon successful authentication
-      setCookies("access_token", response.data.token);
+      // Check if a token was received in the response
+      if (response.data.token) {
+        // Save the access token in a cookie upon successful authentication
+        setCookies("access_token", response.data.token);
   
-      // Store the user's ID in local storage for later retrieval
-      window.localStorage.setItem("userID", response.data.userID);
+        // Store the user's ID in local storage for later retrieval
+        window.localStorage.setItem("userID", response.data.userID);
   
-      // Navigate the user to the homepage after successful login
-      navigate("/");
+        // Navigate the user to the homepage after successful login
+        navigate("/");
+      } else {
+        // Handle the case where the token is missing or invalid
+        alert("Token is missing or invalid.");
+      }
     } catch (err) {
       alert("An error occurred during Login.");
       console.error(err);
     }
   };
+  
   
 
   // Render the Form component tailored for login
