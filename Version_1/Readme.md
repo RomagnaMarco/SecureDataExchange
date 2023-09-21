@@ -29,7 +29,7 @@ Lay the groundwork for a web application using the MERN stack: MongoDB, Express.
 3. Navigate to another directory: ```cd into SecureDataExchange\Version_1\server```
 4. Set up a new Package Json: ```yarn init```
 5. Add necessary dependencies: 
-   - ```yarn add express cors bcrypt jsonwebtoken mongoose```
+   - ```yarn add express cors bcrypt jsonwebtoken mongoose zxcvbn```
    - For development: `yarn add --dev nodemon`
 
 </details>
