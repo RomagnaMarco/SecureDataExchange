@@ -70,7 +70,8 @@ const Login = ({ toggleForm }) => {
         navigate("/");
       } else {
         // Handle the case where the token is missing or invalid
-        setError("Invalid credentials. Please try again.");
+        setError(<span style={{ color: 'red' }}>Invalid credentials. Please try again.</span>);
+
       }
     } catch (err) {
       alert("An error occurred during Login.");
