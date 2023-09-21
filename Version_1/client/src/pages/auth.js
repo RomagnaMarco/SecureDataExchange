@@ -70,13 +70,13 @@ const Login = ({ toggleForm }) => {
         navigate("/");
       } else {
         // Handle the case where the token is missing or invalid
-        alert("Token is missing or invalid.");
+        setError("Invalid credentials. Please try again.");
       }
     } catch (err) {
       alert("An error occurred during Login.");
       console.error(err);
     }
-  };
+  };  
   
   
 
