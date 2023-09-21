@@ -9,10 +9,17 @@ import { useNavigate } from 'react-router-dom';
  * Main authentication component comprising both Login and Register forms.
  */
 export const Auth = () => {
+    // Initialize state to track whether to show the registration form
+    const [showRegistration, setShowRegistration] = useState(false);
+
     return (
         <div className="auth">
-            <Login />
-            <Register />
+            {/* Show either Login or Register form based on the state */}
+            {showRegistration ? (
+                <Register toggleForm={() => setShowRegistration(false)} />
+            ) : (
+                <Login toggleForm={() => setShowRegistration(true)} />
+            )}
         </div>
     );
 }
@@ -20,7 +27,7 @@ export const Auth = () => {
 /**
  * Component to handle user login.
  */
-const Login = () => {
+const Login = ({ toggleForm }) => {
     // State to manage login form fields
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
@@ -73,7 +80,7 @@ const Login = () => {
 /**
  * Component to handle user registration.
  */
-const Register = () => {
+const Register = ({ toggleForm }) => {
     // State to manage registration form fields
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
