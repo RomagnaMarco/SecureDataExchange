@@ -186,30 +186,32 @@ const Form = ({
   );
 };
 
+// Function to determine the color based on password strength
 const getPasswordStrengthColor = (strength) => {
-    switch (strength) {
-      case 0:
-        return "red"; // Weakest password
-      case 1:
-        return "orange"; // Not very strong
-      case 2:
-        return "yellow"; // Moderate strength
-      case 3:
-        return "green"; // Strong password
-      case 4:
-        return "darkgreen"; // Very strong password
-      default:
-        return "black"; // Default color for unknown strength
-    }
-  };
+  switch (strength) {
+    case 0:
+      return "red"; // Weakest password
+    case 1:
+      return "orange"; // Not very strong
+    case 2:
+      return "yellow"; // Moderate strength
+    case 3:
+      return "green"; // Strong password
+    case 4:
+      return "darkgreen"; // Very strong password
+    default:
+      return "black"; // Default color for unknown strength
+  }
+};
 
-  
+// Function to get text representation of password strength
 const getPasswordStrengthTextWithColor = (strength) => {
-    const strengthText = getPasswordStrengthText(strength);
-    const color = getPasswordStrengthColor(strength);
-    return <span style={{ color }}>{strengthText}</span>;
-  };
+  const strengthText = getPasswordStrengthText(strength);
+  const color = getPasswordStrengthColor(strength);
+  return <span style={{ color }}>{strengthText}</span>;
+};
 
+// Function to get text representation of password strength
 const getPasswordStrengthText = (strength) => {
   switch (strength) {
     case 0:
