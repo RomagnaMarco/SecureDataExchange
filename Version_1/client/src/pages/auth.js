@@ -130,13 +130,18 @@ const Register = ({ toggleForm }) => {
         username={username}
         setUsername={setUsername}
         password={password}
-        setPassword={handlePasswordChange} // Pass the updated password handling function
+        setPassword={handlePasswordChange}
         label="Register"
         onSubmit={handleRegister}
       />
       {/* Display error message */}
       {error && <p>{error}</p>}
-      <div>Password Strength: {getPasswordStrengthText(passwordStrength)}</div>
+      <div>
+        Password Strength:{" "}
+        <span style={{ color: getPasswordStrengthColor(passwordStrength) }}>
+          {getPasswordStrengthTextWithColor(passwordStrength)}
+        </span>
+      </div>
       <button onClick={toggleForm}>Already Have an account? Click Here to Login</button>
     </div>
   );
@@ -180,6 +185,30 @@ const Form = ({
     </div>
   );
 };
+
+const getPasswordStrengthColor = (strength) => {
+    switch (strength) {
+      case 0:
+        return "red"; // Weakest password
+      case 1:
+        return "orange"; // Not very strong
+      case 2:
+        return "yellow"; // Moderate strength
+      case 3:
+        return "green"; // Strong password
+      case 4:
+        return "darkgreen"; // Very strong password
+      default:
+        return "black"; // Default color for unknown strength
+    }
+  };
+
+  
+const getPasswordStrengthTextWithColor = (strength) => {
+    const strengthText = getPasswordStrengthText(strength);
+    const color = getPasswordStrengthColor(strength);
+    return <span style={{ color }}>{strengthText}</span>;
+  };
 
 const getPasswordStrengthText = (strength) => {
   switch (strength) {
