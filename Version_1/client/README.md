@@ -46,10 +46,13 @@ For a holistic frontend functionality in the SecureDataExchange application, we'
 ### `jwt-decode`
 - **What it does**: Facilitates decoding of JWTs, empowering the application to extract and use information stored in JSON Web Tokens. It's critical for user authentication and role-based access control within the application.
 
+### `zxcvbn`
+- **What it does**: A password strength estimation library that evaluates password strength based on factors like length, complexity, and dictionary words. It helps ensure users create strong passwords during registration to enhance security.
+
 To seamlessly integrate these dependencies, execute:
 
 ```bash
-yarn add react-router-dom axios react-cookie jwt-decode
+yarn add react-router-dom axios react-cookie jwt-decode zxcvbn
 ```
 </details>
 
