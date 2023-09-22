@@ -57,8 +57,15 @@ const Login = ({ toggleForm }) => {
         setError(<span style={{ color: 'red' }}>Invalid credentials. Please try again.</span>);
       }
     } catch (err) {
-      setError("An error occurred during Login.");
-      console.error(err);
+      // Handle specific error cases
+      if (err.response && err.response.status === 401) {
+        setError(<span style={{ color: 'red' }}>Authentication failed. Please check your credentials.</span>);
+      } else if (err.response && err.response.status === 500) {
+        setError(<span style={{ color: 'red' }}>An internal server error occurred. Please try again later.</span>);
+      } else {
+        setError(`An error occurred during Login. Please try again.`);
+        console.error(err);
+      }
     }
   };
 
@@ -177,7 +184,7 @@ const Form = ({
             type="password"
             id="password"
             value={password}
-            onChange={setPassword} // Use the provided setPassword function
+            onChange={(event) => setPassword(event.target.value)}
           />
         </div>
         <button type="submit">{label}</button>
@@ -228,3 +235,5 @@ const getPasswordStrengthText = (strength) => {
       return "Unknown";
   }
 };
+
+export default Auth;
