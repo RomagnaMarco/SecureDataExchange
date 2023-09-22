@@ -126,11 +126,9 @@ const Register = ({ toggleForm }) => {
       alert("Registration completed! You can now log in.");
       setError("");  // Clear any previous error messages
     } catch (err) {
-      console.error("Registration error:", err);  // Log the error for debugging
-  
       if (err.response) {
         if (err.response.status === 409) {
-          setError(err.response.data.message);
+          setError(err.response.data.message);  // This uses the custom error message from the server.
         } else if (err.response.status === 500) {
           setError("An internal server error occurred. Please try again later.");
         } else {
@@ -139,8 +137,14 @@ const Register = ({ toggleForm }) => {
       } else {
         setError("Unable to connect to the server. Please try again.");
       }
+  
+      // You can optionally keep this log for unexpected errors (not 409).
+      if (!err.response || (err.response && err.response.status !== 409)) {
+        console.error("Registration error:", err);
+      }
     }
-  };
+  }; // This is the missing closing brace for the handleRegister function.
+  
   
 
   return (
