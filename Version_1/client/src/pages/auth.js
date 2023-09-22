@@ -10,12 +10,10 @@ import { useNavigate } from "react-router-dom";
  * Main authentication component comprising both Login and Register forms.
  */
 export const Auth = () => {
-  // Initialize state to track whether to show the registration form
   const [showRegistration, setShowRegistration] = useState(false);
 
   return (
     <div className="auth">
-      {/* Show either Login or Register form based on the state */}
       {showRegistration ? (
         <Register toggleForm={() => setShowRegistration(false)} />
       ) : (
@@ -57,7 +55,6 @@ const Login = ({ toggleForm }) => {
         setError(<span style={{ color: 'red' }}>Invalid credentials. Please try again.</span>);
       }
     } catch (err) {
-      // Handle specific error cases
       if (err.response && err.response.status === 401) {
         setError(<span style={{ color: 'red' }}>Authentication failed. Please check your credentials.</span>);
       } else if (err.response && err.response.status === 500) {
@@ -75,13 +72,11 @@ const Login = ({ toggleForm }) => {
         username={username}
         setUsername={setUsername}
         password={password}
-        setPassword={setPassword}
+        onPasswordChange={(event) => setPassword(event.target.value)}
         label="Login"
         onSubmit={handleLogin}
       />
-      {/* Display error message */}
       {error && <p>{error}</p>}
-      {/* Button to switch to the Register form */}
       <button onClick={toggleForm}>Don't Have an Account? Click Here to Register</button>
     </div>
   );
@@ -94,17 +89,14 @@ const Register = ({ toggleForm }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-  // State to store the password strength score
   const [passwordStrength, setPasswordStrength] = useState(0);
 
   const handlePasswordChange = (event) => {
     const newPassword = event.target.value;
     setPassword(newPassword);
-
-    // Check password strength and update the score
     const result = zxcvbn(newPassword);
     setPasswordStrength(result.score);
-  };
+  };  
 
   const handleRegister = async (event) => {
     event.preventDefault();
@@ -137,14 +129,13 @@ const Register = ({ toggleForm }) => {
         username={username}
         setUsername={setUsername}
         password={password}
-        setPassword={handlePasswordChange}
+        onPasswordChange={handlePasswordChange}
         label="Register"
         onSubmit={handleRegister}
       />
-      {/* Display error message */}
       {error && <p>{error}</p>}
       <div>
-        Password Strength:{" "}
+        Password Strength: 
         <span style={{ color: getPasswordStrengthColor(passwordStrength) }}>
           {getPasswordStrengthTextWithColor(passwordStrength)}
         </span>
@@ -161,7 +152,7 @@ const Form = ({
   username,
   setUsername,
   password,
-  setPassword,
+  onPasswordChange,
   label,
   onSubmit,
 }) => {
@@ -184,7 +175,7 @@ const Form = ({
             type="password"
             id="password"
             value={password}
-            onChange={(event) => setPassword(event.target.value)}
+            onChange={onPasswordChange}
           />
         </div>
         <button type="submit">{label}</button>
@@ -193,40 +184,36 @@ const Form = ({
   );
 };
 
-// Function to determine the color based on password strength
 const getPasswordStrengthColor = (strength) => {
   switch (strength) {
     case 0:
-      return "red"; // Weakest password
+      return "red";
     case 1:
-      return "orange"; // Not very strong
+      return "orange";
     case 2:
-      return "yellow"; // Moderate strength
+      return "yellow";
     case 3:
-      return "green"; // Strong password
+      return "green";
     case 4:
-      return "darkgreen"; // Very strong password
+      return "darkgreen";
     default:
-      return "black"; // Default color for unknown strength
+      return "black";
   }
 };
 
-// Function to get text representation of password strength
 const getPasswordStrengthTextWithColor = (strength) => {
   const strengthText = getPasswordStrengthText(strength);
-  const color = getPasswordStrengthColor(strength);
-  return <span style={{ color }}>{strengthText}</span>;
+  return strengthText;
 };
 
-// Function to get text representation of password strength
 const getPasswordStrengthText = (strength) => {
   switch (strength) {
     case 0:
-      return "Weak";
+      return "Very Weak";
     case 1:
-      return "Fair";
+      return "Weak";
     case 2:
-      return "Good";
+      return "Moderate";
     case 3:
       return "Strong";
     case 4:
@@ -235,5 +222,3 @@ const getPasswordStrengthText = (strength) => {
       return "Unknown";
   }
 };
-
-export default Auth;
