@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 
 /**
  * Main authentication component comprising both Login and Register forms.
+ * This component toggles between the Login and Registration forms.
  */
 export const Auth = () => {
   const [showRegistration, setShowRegistration] = useState(false);
@@ -91,6 +92,8 @@ const Register = ({ toggleForm }) => {
   const [error, setError] = useState("");
   const [passwordStrength, setPasswordStrength] = useState(0);
 
+  // This handler not only updates the password state 
+  // but also determines its strength score using the `zxcvbn` library.
   const handlePasswordChange = (event) => {
     const newPassword = event.target.value;
     setPassword(newPassword);
@@ -147,6 +150,7 @@ const Register = ({ toggleForm }) => {
 
 /**
  * Reusable Form component to cater to both Login and Registration.
+ * This component abstracts the form structure, reducing redundancy.
  */
 const Form = ({
   username,
@@ -184,6 +188,10 @@ const Form = ({
   );
 };
 
+/**
+ * Determines the color to represent the strength of the password.
+ * This function uses the score (from 0 to 4) given by the `zxcvbn` library.
+ */
 const getPasswordStrengthColor = (strength) => {
   switch (strength) {
     case 0:
@@ -201,11 +209,22 @@ const getPasswordStrengthColor = (strength) => {
   }
 };
 
+/**
+ * Retrieves the textual representation of the password's strength.
+ * This function is essentially wrapping `getPasswordStrengthText` and
+ * can be considered redundant in the current context. One might decide 
+ * to use this function if they want to add more styling or representations
+ * besides just color in the future.
+ */
 const getPasswordStrengthTextWithColor = (strength) => {
   const strengthText = getPasswordStrengthText(strength);
   return strengthText;
 };
 
+/**
+ * Converts the numerical strength score (from 0 to 4) into a descriptive string.
+ * The score is determined by the `zxcvbn` library.
+ */
 const getPasswordStrengthText = (strength) => {
   switch (strength) {
     case 0:
