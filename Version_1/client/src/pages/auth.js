@@ -67,13 +67,17 @@ const Login = ({ toggleForm }) => {
     }
   };
 
+  const handlePasswordChange = (event) => {
+    setPassword(event.target.value);
+  };
+
   return (
     <div>
       <Form
         username={username}
         setUsername={setUsername}
         password={password}
-        onPasswordChange={(event) => setPassword(event.target.value)}
+        onPasswordChange={handlePasswordChange}
         label="Login"
         onSubmit={handleLogin}
       />
@@ -103,28 +107,41 @@ const Register = ({ toggleForm }) => {
 
   const handleRegister = async (event) => {
     event.preventDefault();
-
+  
     if (!username || !password) {
       setError("Please enter both a username and password.");
       return;
     }
-
+  
     if (passwordStrength < 3) {
       setError("Please choose a stronger password.");
       return;
     }
-
+  
     try {
       await axios.post("http://localhost:3001/auth/register", {
         username,
         password,
       });
       alert("Registration completed! You can now log in.");
+      setError("");  // Clear any previous error messages
     } catch (err) {
-      setError("An error occurred during registration.");
-      console.error(err);
+      console.error("Registration error:", err);  // Log the error for debugging
+  
+      if (err.response) {
+        if (err.response.status === 409) {
+          setError(err.response.data.message);
+        } else if (err.response.status === 500) {
+          setError("An internal server error occurred. Please try again later.");
+        } else {
+          setError("An error occurred during registration. Please try again.");
+        }
+      } else {
+        setError("Unable to connect to the server. Please try again.");
+      }
     }
   };
+  
 
   return (
     <div>
@@ -136,7 +153,7 @@ const Register = ({ toggleForm }) => {
         label="Register"
         onSubmit={handleRegister}
       />
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: 'red' }}>{error}</p>}
       <div>
         Password Strength: 
         <span style={{ color: getPasswordStrengthColor(passwordStrength) }}>
@@ -145,7 +162,7 @@ const Register = ({ toggleForm }) => {
       </div>
       <button onClick={toggleForm}>Already Have an account? Click Here to Login</button>
     </div>
-  );
+  );  
 };
 
 /**

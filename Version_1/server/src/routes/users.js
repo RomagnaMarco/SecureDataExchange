@@ -11,16 +11,17 @@ const router = express.Router()
 
 // Define a POST endpoint for user registration
 router.post("/register", async (req, res) => {
-    // Extract username and password from the request body
-    const { username, password } = req.body;
+  // Extract username and password from the request body
+  const { username, password } = req.body;
 
-    // Try to find an existing user with the given username
-    const user = await UserModel.findOne({ username: username });
+  // Try to find an existing user with the given username
+  const user = await UserModel.findOne({ username: username });
 
-    // If a user is found, they've already registered
-    if (user) {
-        return res.json({ message: "User already exists!" });
-    }
+  // If a user is found, they've already registered
+  if (user) {
+      // Return a 409 Conflict status and a more descriptive error message
+      return res.status(409).json({ message: "Username already exists. Please choose another one." });
+  }
 
     // If no existing user is found, hash the provided password
     const hashedPassword = await bcrypt.hash(password, 10);
